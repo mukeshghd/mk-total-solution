@@ -1,0 +1,2086 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="theme-color" content="#0b1020">
+<title>MK TOTAL SOLUTION — V30 FINAL</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,Helvetica,sans-serif;background:#0b1020;color:#fff;min-height:100vh}
+.lock{position:fixed;inset:0;background:#0b1020;z-index:9999;display:flex;align-items:center;justify-content:center;padding:18px}
+.license-box{width:100%;max-width:430px;background:#111827;border:1px solid #273449;border-radius:18px;padding:22px;box-shadow:0 20px 60px #0008}
+.logo{text-align:center;font-size:25px;font-weight:900;margin-bottom:5px}
+.sub{text-align:center;color:#94a3b8;font-size:12px;margin-bottom:20px}
+.plan{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.plan button{padding:12px;border:1px solid #334155;border-radius:9px;background:#172033;color:#fff;font-weight:800}
+.plan button.active{background:#2563eb;border-color:#60a5fa}
+input{width:100%;padding:13px;background:#070c16;color:#fff;border:1px solid #334155;border-radius:9px;outline:none;text-align:center;font-size:16px;letter-spacing:1px}
+button.activate{width:100%;margin-top:9px;padding:13px;border:0;border-radius:9px;background:#059669;color:#fff;font-weight:900;font-size:15px}
+.status{margin-top:12px;background:#0b1220;border-radius:9px;padding:11px;color:#cbd5e1;font-size:13px;line-height:1.6}
+.ok{color:#22c55e}.bad{color:#f87171}
+.info{margin-top:12px;color:#64748b;font-size:11px;text-align:center;line-height:1.5}
+.app{display:none;width:100%;max-width:900px;margin:auto;padding:12px}
+.app.ready{display:block}
+.header,.card,.game-total-card{background:#111827;border:1px solid #273449;border-radius:14px;padding:12px;margin-bottom:12px}
+.title{text-align:center;font-size:25px;font-weight:800}.subtitle{text-align:center;color:#9ca3af;margin-top:4px;font-size:12px}
+.licensebar{display:flex;justify-content:space-between;gap:8px;align-items:center;background:#0b1220;border:1px solid #334155;border-radius:9px;padding:9px;margin-top:9px;font-size:12px}
+.licensebar b{color:#22c55e}.licensebar button{background:#475569;color:#fff;border:0;border-radius:7px;padding:6px 9px;font-weight:800}
+.row{display:flex;gap:8px;flex-wrap:wrap}label{display:block;color:#9ca3af;font-size:12px;margin-bottom:5px}
+select,input,textarea,button{font-family:inherit}select,input{width:100%;background:#0b1220;color:#fff;border:1px solid #334155;border-radius:9px;padding:11px;outline:none}
+.field{flex:1;min-width:160px}.trial-timer{display:none;background:#172033;border:1px solid #475569;border-radius:7px;padding:5px 7px;color:#fbbf24;font-weight:900;white-space:nowrap}.game-select{margin-top:0}.game-select select{font-weight:800;font-size:16px}.trial-badge{margin-top:9px;text-align:center;background:#172033;border:1px solid #334155;border-radius:8px;padding:7px;color:#fbbf24;font-size:11px;font-weight:800}
+
+textarea{width:100%;min-height:230px;resize:vertical;background:#070c16;color:#f8fafc;border:1px solid #334155;border-radius:10px;padding:12px;font-size:15px;line-height:1.55;outline:none;white-space:pre-wrap}
+.output{min-height:230px;background:#070c16;color:#f8fafc;border:1px solid #334155;border-radius:10px;padding:12px;font-size:15px;line-height:1.35;white-space:pre-wrap;overflow:auto}
+.buttons{display:grid;grid-template-columns:repeat(2,1fr);gap:7px;margin-top:9px}
+button{border:0;border-radius:9px;padding:11px 8px;cursor:pointer;font-weight:800;color:#fff;background:#2563eb}
+.btn-save{background:#059669}.btn-delete{background:#dc2626}.btn-copy{background:#7c3aed}
+.result-row{display:flex;gap:7px;align-items:center}.result-row input:first-child{width:90px;flex:0 0 90px;text-align:center;font-size:18px;font-weight:800}.result-row input:nth-child(2){width:120px;flex:0 0 120px}.result-row button{width:65px;flex:0 0 65px}
+.result-status{margin-top:8px;background:#0b1220;border-radius:9px;padding:10px;color:#cbd5e1;font-size:14px;line-height:1.6}
+.amount-found{color:#22c55e;font-weight:800;font-size:18px}.amount-not-found{color:#f87171;font-weight:700}
+.client-actions{display:flex;gap:6px;margin-top:7px}.client-actions button{flex:1}
+.game-total-title{color:#9ca3af;font-size:12px;margin-bottom:9px}.game-total-list{display:flex;flex-direction:column;gap:7px}
+ .game-total-row{display:flex;align-items:center;justify-content:space-between;background:#172033;border:1px solid #334155;border-radius:9px;padding:9px 10px;gap:8px}
+.game-total-name{font-size:16px;font-weight:800;min-width:55px}.game-total-right{display:flex;align-items:center;gap:8px;margin-left:auto}.game-total-value{font-size:19px;font-weight:900;color:#22c55e}.game-total-row.active-game{border-color:#60a5fa}.game-delete{background:#7f1d1d!important;padding:5px 7px!important;font-size:10px!important;border-radius:6px!important;width:auto!important;min-width:34px}
+.title-line{display:flex;align-items:center;justify-content:center;gap:8px}.help-btn{background:#475569!important;padding:6px 10px!important;font-size:11px!important;border-radius:7px!important}
+.game-table-modal-box{max-width:700px;background:#fff;color:#111827;border:0}.game-table-modal-box .modal-head h3{color:#111827}.game-table-modal-box .close-btn{color:#fff}.game-table-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:7px;max-height:72vh;overflow:auto;padding:2px}.game-cell{border:1px solid #d1d5db;border-radius:9px;background:#f8fafc;padding:8px 5px;text-align:center;min-height:54px}.game-cell-num{font-weight:900;font-size:16px;color:#111827}.game-cell-amt{margin-top:3px;font-size:12px;font-weight:800;color:#16a34a}.game-cell.empty .game-cell-amt{color:#94a3b8}.game-cell.has-amount{border-color:#35b779;background:#f0fdf4}@media(max-width:650px){.game-table-grid{grid-template-columns:repeat(4,1fr);gap:6px}.game-cell{padding:7px 3px;min-height:50px}.game-cell-num{font-size:14px}}
+.modal{display:none;position:fixed;inset:0;background:#000b;z-index:10000;align-items:center;justify-content:center;padding:14px}.modal.show{display:flex}.modal-box{width:100%;max-width:620px;max-height:88vh;overflow:auto;background:#111827;border:1px solid #334155;border-radius:15px;padding:15px;box-shadow:0 20px 60px #000b}.modal-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}.modal-head h3{font-size:18px}.close-btn{background:#475569!important;padding:7px 10px!important}.help-section,.master-game{background:#0b1220;border:1px solid #334155;border-radius:10px;padding:10px;margin-bottom:8px}.help-section h4,.master-game h4{font-size:14px;margin-bottom:6px;color:#60a5fa}.help-example{font-family:monospace;font-size:13px;line-height:1.7;color:#e2e8f0;white-space:pre-wrap}.master-total{font-size:18px;font-weight:900;color:#22c55e}.master-breakdown{font-size:13px;color:#cbd5e1;margin-top:5px;line-height:1.6}
+.game-summary{display:flex;align-items:center;justify-content:space-between;gap:10px;background:#172033;border:1px solid #475569;border-radius:11px;padding:12px;margin:0 0 12px;font-weight:900}.game-summary-name{font-size:18px}.game-summary-total{font-size:22px;color:#22c55e}.master-result{background:#0b1220;border:1px solid #334155;border-radius:10px;padding:11px;margin-bottom:10px}.master-result-title{font-size:12px;color:#94a3b8;margin-bottom:7px}.master-result-row{display:flex;flex-direction:column;gap:7px;align-items:stretch}.master-result-row input:first-child,.master-result-row input:nth-child(2),.master-result-row button{width:100%;flex:0 0 auto}.master-result-row input:first-child{font-size:20px;font-weight:900}.master-result-status{margin-top:8px;background:#111827;border-radius:8px;padding:9px;color:#cbd5e1;font-size:13px;line-height:1.6}.master-pass{margin-top:8px;background:#111827;border:1px solid #263449;border-radius:8px;padding:8px;font-size:13px;line-height:1.6}.master-pass b{color:#22c55e}.small{font-size:11px;color:#64748b;margin-top:6px}
+.home-page{display:none;max-width:900px;margin:0 auto;padding:8px 0 10px;min-height:100dvh;box-sizing:border-box}
+.home-page.show{display:block}
+.home-brand{display:none}
+.home-brand h1{font-size:25px;color:#159a63;text-align:center;font-weight:900;margin:0 0 4px}
+.home-brand p{text-align:center;color:#64748b;font-size:12px;margin:0}
+.client-panel{background:#fff;border:2px solid #35b779;border-radius:22px;padding:14px;box-shadow:0 10px 25px rgba(0,0,0,.07);margin-bottom:10px}
+.client-top{display:grid;grid-template-columns:1.35fr .45fr;gap:10px;margin-bottom:12px}
+.client-name-input{font-size:18px!important;height:58px!important;background:#fff!important;color:#111827!important;border:1px solid #d1d5db!important}
+.home-add-btn{height:58px;background:linear-gradient(135deg,#22c55e,#16a34a)!important;font-size:18px!important;border-radius:14px!important}
+.home-client-select{width:100%;height:58px!important;font-size:17px!important;background:#fff!important;color:#111827!important;border:1px solid #d1d5db!important}
+.rate-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.rate-box{display:grid;grid-template-columns:90px 1fr;align-items:center;gap:8px}
+.rate-box label{color:#18a66a;font-weight:900;font-size:16px}
+.rate-box input{height:48px!important;background:#fff!important;color:#111827!important;border:1px solid #d1d5db!important}
+.game-select-panel{display:grid;grid-template-columns:92px 1fr 78px;gap:10px;align-items:center;margin:10px 0}
+.game-select-label{color:#18a66a;font-weight:900;font-size:16px}
+.home-game-select{width:100%;height:52px!important;font-size:16px!important;background:#fff!important;color:#111827!important;border:1px solid #d1d5db!important}
+.home-open-btn{height:52px!important;background:linear-gradient(135deg,#22c55e,#16a34a)!important;color:#fff!important;border-radius:13px!important;font-size:16px!important;font-weight:900!important;padding:0 10px!important}
+.recent-title{font-size:18px;font-weight:900;color:#475569;margin:10px 0 6px}
+.recent-wrap{overflow:auto;border-radius:14px;box-shadow:0 8px 22px rgba(0,0,0,.06);max-height:calc(100dvh - 500px)}
+.recent-table{width:100%;border-collapse:collapse;background:#fff;min-width:650px}
+.recent-table th{background:#f1f5f9;color:#334155;font-size:12px;padding:10px 8px;text-align:left;white-space:nowrap}
+.recent-table td{padding:9px 8px;border-top:1px solid #e5e7eb;font-size:14px;font-weight:700;white-space:nowrap}
+.client-action-btn{border:0;border-radius:8px;padding:5px 8px;margin-right:4px;cursor:pointer;background:#f1f5f9!important;color:#111827!important;font-size:15px!important;width:auto!important}
+.page-back{background:#475569!important;width:auto!important;padding:6px 10px!important;font-size:11px!important;border-radius:7px!important}
+@media(max-width:650px){
+  .home-page{padding:8px 8px 10px;overflow:hidden}
+  .client-panel{padding:12px;border-radius:21px;margin-bottom:8px}
+  .client-top{grid-template-columns:1.35fr .55fr;gap:8px;margin-bottom:10px}
+  .client-name-input{height:58px!important;font-size:17px!important}
+  .home-add-btn{height:58px!important;font-size:17px!important}
+  .home-client-select{height:56px!important;font-size:16px!important}
+  .rate-grid{gap:8px;margin-top:10px}
+  .rate-box{grid-template-columns:74px 1fr;gap:6px}
+  .rate-box label{font-size:15px}
+  .rate-box input{height:46px!important}
+  .game-select-panel{grid-template-columns:82px 1fr 70px;gap:7px;margin:8px 0}
+  .game-select-label{font-size:15px}
+  .home-game-select{height:50px!important;font-size:15px!important}
+  .home-open-btn{height:50px!important;font-size:15px!important}
+  .recent-title{font-size:17px;margin:8px 0 5px}
+  .recent-wrap{max-height:calc(100dvh - 485px)}
+}
+
+@media(max-width:650px){.result-row{flex-wrap:wrap}.result-row input:first-child,.result-row input:nth-child(2),.result-row button{flex:1;width:auto}}
+
+/* V9: requested Add Result + Master full page */
+.add-result-row{margin:0 0 8px}
+.add-result-btn{width:100%;background:linear-gradient(135deg,#059669,#22c55e)!important;border:1px solid #34d399;padding:12px;font-size:15px;font-weight:900}
+.game-summary{cursor:pointer}.game-summary:active{transform:scale(.995)}
+.game-history-page{display:none;min-height:100dvh;width:100%;max-width:900px;margin:0 auto;padding:10px;background:linear-gradient(180deg,#07111f 0%,#101827 100%);color:#fff}
+.game-history-page.show{display:block}.game-history-head{display:flex;align-items:center;justify-content:space-between;gap:10px;background:linear-gradient(135deg,#111827,#172554);border:1px solid #334155;border-radius:14px;padding:13px;margin-bottom:10px}.game-history-title{font-size:22px;font-weight:900;color:#22c55e}.game-history-sub{font-size:10px;color:#94a3b8;margin-top:3px}.game-history-list{display:flex;flex-direction:column;gap:8px}.game-history-item{background:#0b1220;border:1px solid #273449;border-radius:12px;padding:10px}.game-history-top{display:flex;align-items:center;justify-content:space-between;gap:8px}.game-history-meta{font-size:11px;color:#94a3b8;line-height:1.5}.game-history-total{font-size:16px;font-weight:900;color:#22c55e}.game-history-preview{margin-top:7px;font-family:monospace;font-size:12px;line-height:1.5;color:#cbd5e1;white-space:pre-wrap;max-height:180px;overflow:auto}.game-history-actions{display:flex;justify-content:flex-end;margin-top:8px}.game-history-delete{background:#dc2626!important;padding:7px 11px!important;font-size:11px!important;border-radius:8px!important}.game-history-empty{text-align:center;color:#64748b;background:#0b1220;border:1px solid #273449;border-radius:12px;padding:18px;font-size:13px}
+.game-summary-right{display:flex;align-items:center;gap:8px;margin-left:auto}
+.game-summary-delete{background:#dc2626!important;padding:7px 9px!important;font-size:10px!important;border-radius:7px!important}
+.master-page{display:none;min-height:100dvh;width:100%;max-width:900px;margin:0 auto;padding:10px;background:linear-gradient(180deg,#07111f 0%,#101827 100%);color:#fff}
+.master-page.show{display:block}
+.master-page-head{display:flex;align-items:center;justify-content:space-between;gap:10px;background:linear-gradient(135deg,#111827,#172554);border:1px solid #334155;border-radius:14px;padding:13px;margin-bottom:10px;box-shadow:0 10px 28px #0005}
+.master-page-title{font-size:24px;font-weight:900;background:linear-gradient(90deg,#22c55e,#38bdf8,#a78bfa);-webkit-background-clip:text;background-clip:text;color:transparent}
+.master-page-sub{font-size:11px;color:#94a3b8;margin-top:3px}
+.master-back-btn{background:#475569!important;padding:8px 12px!important;border-radius:8px!important;font-size:12px!important}
+.master-controls-card,.master-table-card,.master-created-card{background:#111827;border:1px solid #334155;border-radius:14px;padding:12px;margin-bottom:10px;box-shadow:0 8px 22px #0003}
+.master-selected-line label{margin-bottom:5px}
+.master-result-chip{margin-top:9px;background:#0b1220;border:1px solid #334155;border-radius:9px;padding:9px;font-size:13px;font-weight:900;color:#22c55e}
+.master-action-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-top:10px}
+.master-action{padding:11px 6px!important;font-size:12px!important}
+.master-action.cutting{background:#dc2626!important}.master-action.less{background:#f59e0b!important}.master-action.create{background:#2563eb!important}.master-action.copy{background:#7c3aed!important}
+.master-adjust-info{margin-top:8px;color:#94a3b8;font-size:11px;line-height:1.5}
+.master-table-head,.master-number-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;align-items:center}
+.master-table-head{padding:7px 10px;color:#94a3b8;font-size:11px;font-weight:900;border-bottom:1px solid #334155}
+.master-number-grid{display:flex;flex-direction:column;gap:5px;margin-top:7px}
+.master-number-row{background:#0b1220;border:1px solid #273449;border-radius:8px;padding:8px 10px;font-size:14px}
+.master-number-row.has-amount{border-color:#166534;background:#0c1f17}
+.master-number{font-weight:900}.master-amount{font-weight:900;color:#22c55e;text-align:right}
+.master-number-row.zero .master-amount{color:#64748b}
+.master-created-title{font-size:12px;font-weight:900;color:#60a5fa;margin-bottom:7px}
+#masterCreatedData{min-height:180px;background:#070c16!important}
+@media(max-width:650px){.master-page{padding:8px}.master-page-title{font-size:22px}.master-action-grid{grid-template-columns:repeat(4,1fr);gap:5px}.master-action{font-size:10px!important;padding:10px 3px!important}.master-number-row{padding:7px 9px}.game-summary-delete{padding:7px 8px!important}}
+
+/* V8: second-page polish + master game selector */
+.app{max-width:760px;padding:10px;background:linear-gradient(180deg,#0b1020 0%,#101827 100%)}
+.header{background:linear-gradient(135deg,#111827,#172554);border-color:#334155;box-shadow:0 10px 28px #0005}
+.title{letter-spacing:.5px;background:linear-gradient(90deg,#22c55e,#38bdf8,#a78bfa);-webkit-background-clip:text;background-clip:text;color:transparent}
+.card{box-shadow:0 8px 22px #0003}
+.card button{transition:transform .12s ease,filter .12s ease}.card button:active{transform:scale(.98)}
+.master-game-select{width:100%;background:#111827;color:#fff;border:1px solid #475569;border-radius:10px;padding:11px;font-weight:900;font-size:15px;outline:none}
+.selected-master-game{border-color:#22c55e!important;background:linear-gradient(145deg,#0b1220,#10231b)!important}
+@media(max-width:650px){.app{padding:8px}.title{font-size:23px}.subtitle{font-size:11px}.licensebar{font-size:11px}}
+
+/* V10 requested UI: client popup + compact 100-number master */
+.client-modal-box{max-width:560px;background:#f8fafc;color:#111827;border:2px solid #35b779;box-shadow:0 18px 55px #0005}
+.client-modal-box .modal-head h3{color:#16a34a;font-size:20px}
+.client-modal-box .close-btn{color:#fff}
+.client-modal-name{background:#fff!important;color:#111827!important;border:1px solid #cbd5e1!important;text-align:left!important;font-size:18px!important;letter-spacing:0!important}
+.client-rate-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+.client-rate-grid label{color:#16a34a;font-weight:900}
+.client-rate-grid input{background:#fff!important;color:#111827!important;border:1px solid #cbd5e1!important}
+.client-modal-buttons{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.client-modal-recent-title{margin:14px 0 7px;color:#475569;font-weight:900}
+.client-modal-recent{max-height:260px;overflow:auto;background:#fff;border:1px solid #e2e8f0;border-radius:10px}
+.client-modal-recent-row{display:grid;grid-template-columns:28px minmax(90px,1fr) 70px 70px 38px 38px;gap:4px;align-items:center;padding:8px;border-top:1px solid #e5e7eb;font-size:11px}
+.client-modal-recent-row:first-child{border-top:0}.client-modal-recent-row button{padding:6px 3px!important;font-size:13px!important}.client-modal-player{font-weight:900;overflow:hidden;text-overflow:ellipsis}
+.master-page{background:linear-gradient(180deg,#07111f,#101827);padding:8px;overflow:hidden}
+.master-page-head{margin-bottom:7px;padding:10px;border-radius:13px}
+.master-page-title{font-size:22px}.master-page-sub{font-size:10px}
+.master-table-card{padding:7px;margin-bottom:7px;background:#0b1220;border:1px solid #334155}
+.master-table-top{display:flex;justify-content:space-between;align-items:center;padding:2px 5px 7px;color:#22c55e;font-size:12px;font-weight:900}
+.master-number-grid{display:grid;grid-template-columns:repeat(10,1fr);gap:2px;margin:0;overflow:hidden}
+.master-number-row{display:flex;flex-direction:column;justify-content:center;align-items:center;min-width:0;height:42px;padding:2px 1px;border-radius:4px;background:#111827;border:1px solid #273449;font-size:10px;line-height:1.05}
+.master-number-row.has-amount{border-color:#159a63;background:#0c241a}.master-number{font-size:9px;color:#94a3b8}.master-amount{font-size:11px;color:#22c55e;text-align:center}.master-number-row.zero .master-amount{color:#475569}
+.master-total-row{display:flex;justify-content:space-between;align-items:center;padding:8px 5px 2px;color:#fff;font-size:14px}.master-total-row strong{font-size:19px;color:#22c55e}
+.master-action-grid{grid-template-columns:repeat(4,1fr);gap:5px;margin:0 0 6px}.master-action{padding:10px 3px!important;font-size:11px!important;border-radius:9px}
+.master-save-btn{width:100%;padding:10px!important;background:linear-gradient(135deg,#059669,#22c55e)!important;border-radius:9px;font-size:12px!important}
+.master-adjust-info{text-align:center;margin:5px 0;color:#94a3b8;font-size:10px}
+.master-created-card{margin-top:6px}.master-created-card textarea{min-height:100px}
+@media(max-width:650px){.master-page{min-height:100dvh}.master-number-row{height:39px}.master-number{font-size:8px}.master-amount{font-size:10px}.master-total-row{padding-top:6px}.client-modal-recent-row{grid-template-columns:24px minmax(75px,1fr) 55px 55px 34px 34px;font-size:10px}}
+
+/* V11 requested changes */
+.result-modal-box{max-width:420px;background:#f8fafc;color:#111827;border:2px solid #35b779}.result-modal-box label{color:#16a34a;font-weight:900;margin-top:10px}.result-game-label{background:#ecfdf5;color:#047857;border:1px solid #86efac;border-radius:10px;padding:10px;text-align:center;font-weight:900;margin-bottom:10px}.result-modal-box input{background:#fff!important;color:#111827!important;border:1px solid #cbd5e1!important;text-align:center;font-size:24px!important;letter-spacing:2px}.result-save-btn{width:100%;margin-top:10px}.master-action.save-top{background:linear-gradient(135deg,#059669,#22c55e)!important}
+.final-page{display:none;min-height:100dvh;width:100%;max-width:760px;margin:0 auto;padding:10px;background:linear-gradient(180deg,#07111f,#101827);color:#fff}.final-page.show{display:block}.final-page-head{display:flex;justify-content:space-between;align-items:center;background:linear-gradient(135deg,#111827,#172554);border:1px solid #334155;border-radius:14px;padding:12px;margin-bottom:8px}.final-page-title{font-size:24px;font-weight:900;background:linear-gradient(90deg,#22c55e,#38bdf8,#a78bfa);-webkit-background-clip:text;background-clip:text;color:transparent}.final-page-sub{font-size:10px;color:#94a3b8;margin-top:2px}.final-back-btn{background:#475569!important;padding:8px 12px!important;border-radius:8px!important;font-size:12px!important}.final-client-card{display:flex;justify-content:space-between;align-items:center;background:#111827;border:1px solid #334155;border-radius:12px;padding:10px 12px;margin-bottom:8px;font-size:13px}.final-client-card span{color:#94a3b8}.final-client-card strong{color:#22c55e}.final-games{display:flex;flex-direction:column;gap:5px}.final-game-row{display:grid;grid-template-columns:1.25fr .8fr .8fr .9fr;gap:5px;align-items:center;background:#0b1220;border:1px solid #273449;border-radius:9px;padding:7px 9px;font-size:11px}.final-game-row.head{background:#172033;color:#94a3b8;font-weight:900}.final-game-row .gname{font-weight:900}.final-game-row .num{color:#cbd5e1}.final-game-row .amt{color:#22c55e;font-weight:900;text-align:right}.final-game-row .pass{color:#60a5fa;font-weight:900;text-align:right}.final-grand-card{margin-top:8px;background:#111827;border:1px solid #334155;border-radius:14px;padding:11px;box-shadow:0 8px 22px #0004}.final-grand-row{display:flex;justify-content:space-between;padding:4px 0;font-size:13px}.final-grand-row strong{color:#22c55e}.final-formula{margin-top:7px;padding:8px;border-radius:9px;background:#0b1220;color:#fbbf24;font-weight:900;text-align:center}.final-output{white-space:pre-wrap;margin-top:8px;padding:9px;background:#070c16;border-radius:9px;color:#e2e8f0;font-family:monospace;font-size:12px;line-height:1.7}.final-copy-btn{width:100%;margin-top:8px;background:#7c3aed!important}.final-game-row.loss .pass{color:#f87171}@media(max-width:650px){.final-page{padding:8px}.final-page-title{font-size:22px}.final-game-row{grid-template-columns:1.15fr .7fr .75fr .8fr;font-size:10px;padding:6px}.final-grand-card{padding:9px}}
+</style>
+
+<style>
+.help-page{display:none;min-height:100dvh;width:100%;max-width:900px;margin:0 auto;padding:10px;background:linear-gradient(180deg,#07111f 0%,#101827 100%);color:#fff}
+.help-page.show{display:block}
+.help-page-head{display:flex;align-items:center;justify-content:space-between;gap:10px;background:linear-gradient(135deg,#111827,#172554);border:1px solid #334155;border-radius:14px;padding:13px;margin-bottom:10px}
+.help-page-title{font-size:22px;font-weight:900}.help-page-sub{font-size:10px;color:#94a3b8;margin-top:2px}
+.help-page .help-section{margin-bottom:8px}.help-back-btn{background:#475569!important;padding:8px 12px!important;font-size:11px!important}
+.save-history-card{background:#111827;border:1px solid #273449;border-radius:14px;padding:11px;margin:0 0 12px}
+.save-history-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}.save-history-title{font-size:15px;font-weight:900}.save-history-count{font-size:11px;color:#94a3b8}
+.save-history-list{display:flex;flex-direction:column;gap:7px}.save-history-item{background:#0b1220;border:1px solid #273449;border-radius:10px;padding:9px}.save-history-top{display:flex;align-items:center;justify-content:space-between;gap:7px}.save-history-meta{font-size:11px;color:#94a3b8;line-height:1.5}.save-history-total{font-size:15px;font-weight:900;color:#22c55e}.save-history-preview{margin-top:6px;font-family:monospace;font-size:11px;line-height:1.45;color:#cbd5e1;white-space:pre-wrap;max-height:85px;overflow:auto}.save-history-actions{display:flex;justify-content:flex-end;margin-top:6px}.save-history-delete{background:#dc2626!important;padding:6px 9px!important;font-size:10px!important}.history-empty{text-align:center;color:#64748b;font-size:12px;padding:12px}
+.final-patti{color:#fbbf24!important}.final-adjusted{color:#22c55e!important;font-weight:1000;font-size:26px!important;background:#052e1a;border:2px solid #22c55e;border-radius:12px;padding:7px 12px;box-shadow:0 0 18px #22c55e33}
+.verify-status{margin-top:7px;padding:7px 9px;border-radius:8px;background:#0b1220;border:1px solid #273449;color:#94a3b8;font-size:11px;font-weight:800}.verify-status.ok{color:#22c55e;border-color:#166534}.verify-status.warn{color:#fbbf24;border-color:#854d0e}.verify-status.bad{color:#f87171;border-color:#991b1b}
+</style>
+
+<style>
+.action-dialog-box{max-width:480px;background:#f8fafc;color:#111827;border:2px solid #35b779;box-shadow:0 18px 55px #0006}
+.action-dialog-box .modal-head h3{color:#16a34a;font-size:19px}
+.action-dialog-message{white-space:pre-line;font-size:15px;font-weight:700;line-height:1.45;margin:8px 0 12px;color:#1f2937}
+.action-dialog-input{width:100%!important;box-sizing:border-box;background:#fff!important;color:#111827!important;border:1px solid #94a3b8!important;border-radius:10px!important;padding:12px!important;font-size:18px!important;text-align:left!important;margin:4px 0 10px}
+.action-dialog-buttons{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+.action-dialog-buttons button{min-height:44px}
+
+
+/* OFFLINE RULE ASSISTANT */
+.assistant-btn{background:#7c3aed!important;padding:6px 10px!important;font-size:11px!important;border-radius:7px!important}
+.assistant-page{display:none;min-height:100dvh;width:100%;max-width:900px;margin:0 auto;padding:10px;background:linear-gradient(180deg,#07111f,#101827);color:#fff}
+.assistant-page.show{display:block}.assistant-head{display:flex;align-items:center;justify-content:space-between;gap:10px;background:linear-gradient(135deg,#111827,#2e1065);border:1px solid #5b21b6;border-radius:14px;padding:13px;margin-bottom:10px}.assistant-title{font-size:22px;font-weight:900}.assistant-sub{font-size:10px;color:#c4b5fd;margin-top:2px}.assistant-back{background:#475569!important;padding:8px 12px!important}
+.assistant-chat{min-height:320px;max-height:52vh;overflow:auto;background:#070c16;border:1px solid #334155;border-radius:14px;padding:10px;display:flex;flex-direction:column;gap:9px}.chat-msg{max-width:88%;padding:10px 12px;border-radius:12px;white-space:pre-wrap;line-height:1.45;font-size:13px}.chat-msg.user{align-self:flex-end;background:#2563eb}.chat-msg.bot{align-self:flex-start;background:#172033;border:1px solid #334155;color:#e2e8f0}.assistant-compose{margin-top:9px;display:grid;grid-template-columns:1fr auto;gap:8px}.assistant-compose textarea{min-height:78px;font-size:14px}.assistant-compose button{min-width:92px;background:#7c3aed!important}.assistant-tools{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:9px}.assistant-tools button{background:#0f766e}.assistant-tools button:last-child{background:#475569}.teach-card{margin-top:10px;background:#111827;border:1px solid #334155;border-radius:14px;padding:11px}.teach-card h4{margin-bottom:7px;color:#c4b5fd}.teach-card textarea{min-height:82px;margin-bottom:7px;font-size:13px}.teach-card .buttons{margin-top:2px}.teach-list{margin-top:9px;display:flex;flex-direction:column;gap:7px}.teach-item{background:#0b1220;border:1px solid #273449;border-radius:10px;padding:8px;font-size:11px;white-space:pre-wrap}.teach-item button{float:right;background:#dc2626!important;padding:5px 7px!important;font-size:9px!important}
+
+.plan-lock{background:#0b1020!important;align-items:flex-start!important;overflow:auto!important;padding:24px 12px!important}
+.plan-screen{width:100%;max-width:760px;margin:0 auto;min-height:100%;display:flex;flex-direction:column;align-items:center}
+.plan-logo-wrap{width:100%;display:flex;justify-content:center;align-items:center;margin:6px 0 12px}
+.plan-logo{width:64px;height:64px;object-fit:contain;border-radius:50%;display:block}
+.plan-greeting{width:100%;text-align:left;font-size:22px;font-weight:800;color:#fff;margin-top:2px}
+.plan-title-row{width:100%;display:flex;align-items:center;justify-content:space-between;gap:10px;margin:3px 0 15px}
+.plan-title{margin:0;font-size:28px;font-weight:900;color:#fff;line-height:1.15}
+
+.plan-list{width:100%;display:flex;flex-direction:column;gap:9px}
+.purchase-plan{width:100%;min-height:64px;display:grid;grid-template-columns:1fr 116px;align-items:center;gap:10px;padding:9px 10px 9px 16px;border:1px solid #334155;border-radius:13px;background:linear-gradient(135deg,#172033,#111827);box-shadow:0 8px 20px #0004;text-align:left}
+.purchase-plan:active{transform:scale(.99)}
+.purchase-plan .plan-info{display:flex;align-items:center;gap:14px;min-width:0}
+.purchase-plan .plan-price{font-size:23px;font-weight:950;color:#fff;white-space:nowrap}
+.purchase-plan .plan-label{font-size:15px;font-weight:800;color:#e2e8f0;line-height:1.25;white-space:normal}
+.purchase-plan .buy-now{display:flex;align-items:center;justify-content:center;min-height:44px;padding:0 10px;border-radius:10px;background:#059669;color:#fff;font-size:14px;font-weight:900;border:1px solid #34d399}
+.plan-payment-status{width:100%;display:none;margin-top:10px;padding:10px;border-radius:10px;background:#111827;border:1px solid #334155;color:#f87171;font-size:12px;font-weight:800;line-height:1.45;text-align:center}
+.plan-payment-status.show{display:block}.plan-payment-status.ok{color:#22c55e;border-color:#166534}.plan-help{width:100%;text-align:center;color:#cbd5e1;font-size:14px;font-weight:800;margin-top:16px;padding:10px 0}.plan-help b{color:#fff}.plan-help span{color:#94a3b8;font-weight:700}
+.plan-pin-box{width:100%;margin-top:16px;padding-top:13px;border-top:1px solid #273449}
+.plan-pin-title{text-align:center;color:#cbd5e1;font-size:13px;font-weight:800;margin-bottom:8px}
+.plan-pin-box input{background:#111827!important;color:#fff!important;border:1px solid #334155!important}
+@media(max-width:520px){.plan-lock{padding:18px 10px!important}.plan-logo{width:58px;height:58px}.plan-greeting{font-size:19px}.plan-title-row{gap:7px}.plan-title{font-size:25px}.purchase-plan{grid-template-columns:1fr 92px;gap:7px;padding-left:11px}.purchase-plan .plan-info{gap:8px}.purchase-plan .plan-price{font-size:19px}.purchase-plan .plan-label{font-size:13px}.purchase-plan .buy-now{font-size:12px}}
+</style>
+
+
+
+
+<style>
+.client-entry{padding:12px 10px!important;box-sizing:border-box;overflow:auto}
+.client-entry-box{width:100%;box-sizing:border-box}
+.client-entry-logo{width:25vh;height:25vh;max-width:300px;max-height:300px;min-width:150px;min-height:150px;object-fit:contain;display:block;margin:0 auto 14px;border-radius:50%}
+@media(max-width:520px){.client-entry-logo{width:25vh;height:25vh;max-width:260px;max-height:260px;margin-bottom:12px}}
+</style>
+
+
+
+
+<style id="mk-client-entry-fix">
+#clientEntry.client-entry{
+  display:none;
+  position:fixed;
+  inset:0;
+  z-index:99999;
+  min-height:100dvh;
+  width:100%;
+  background:#0f172a;
+  color:#fff;
+  padding:24px 18px!important;
+  overflow:auto;
+  align-items:flex-start;
+  justify-content:center;
+}
+#clientEntry.client-entry .client-entry-box{
+  width:100%;
+  max-width:560px;
+  margin:auto;
+  padding:18px 0 30px;
+}
+#clientEntry .client-entry-title{
+  font-size:28px;
+  font-weight:900;
+  margin:8px 0 6px;
+  color:#fff;
+}
+#clientEntry .client-entry-sub{
+  font-size:17px;
+  color:#d1d5db;
+  margin-bottom:14px;
+}
+#clientEntry input{
+  display:block!important;
+  width:100%!important;
+  box-sizing:border-box!important;
+  min-height:58px;
+  margin:10px 0!important;
+  padding:14px 16px!important;
+  border:1px solid #334155!important;
+  border-radius:14px!important;
+  background:#111827!important;
+  color:#fff!important;
+  font-size:20px!important;
+}
+#clientEntry .client-entry-btn{
+  display:block!important;
+  width:100%!important;
+  min-height:58px;
+  margin-top:14px!important;
+  border:0!important;
+  border-radius:14px!important;
+  background:#2563eb!important;
+  color:#fff!important;
+  font-size:18px!important;
+  font-weight:900!important;
+}
+#clientEntry .client-entry-status{
+  min-height:22px;
+  margin:8px 0;
+  font-size:14px;
+}
+#clientEntry .client-entry-note{
+  margin-top:12px;
+  color:#cbd5e1;
+  font-size:14px;
+  line-height:1.5;
+}
+</style>
+
+</head>
+<body>
+
+
+<div id="clientEntry" class="client-entry">
+  <div class="client-entry-box">
+    <img class="client-entry-logo" src="data:image/webp;base64,UklGRj4/AABXRUJQVlA4IDI/AAAQ2gCdASpAAUABPpU+mUkloyIqrDdMYVASiWpu1V8U/DBVvlKbUreyE0BxdfL84Hkftn+W/e/N73M+9/8HzOn3P9/6q/6X/uPYL/rvRX8z3nM/9L1sf3v1CP6v/0utj9ErzlP/j7O390/73pt+oB///ba35nwLfxn+l/Kzz5/GfqH89/eP3G/wXuVaM+zDUm+W/kz9v/h/3S9tO/X5if7vqF/j39D/1H5h/Ar9v3odxvQU9+/vH/P9NT5//w+j373/r/YC/Wj/u+Wl4WvpvsC/0H/Hf+z/Q+x/9e+hX6n/+n+5+BT+ef4D/u/47te+kc4IYml13ItbdpoRN7evDjlYRfWLXJ/NrXbpZGChxXV+aHy/bgn39J/YMPOdX5ITam7VmA4jNSHMn68RtWDkVor/+cQWLJtnTgjqfMo/f08KfyhGD01Vh/6SZskdG4Dky4X0nHTRYYzxKhHLqdFkOYZGRybB52AB+QRZ+X81vtKAd+dwbhVXtyLBhAG8aSQv1QoXHBeJtAYnGCaLSJrgWtPrc/R56CPhFaRaL+wZ7tjL2CDrcTwrfVejExmamQqVeWHDzAHm34EnVL7XWbo7lw7EX8pDUL2XLyXYbesU9hPYDbgC0iDhv6DFheHPGKgWhFQ0WDk9pLer6+ivyk9nPfiz/XNaTtPTHMr47i/zbA4PcyqJnYYsRw8jumFPiz1PFbqZ5IKXW3itvYaglkcK8fVC0QyRSA3gfrJE1QRePIcwbhB32Iqnkfu9ZUtm35j1zTNbvL9ZQody360rA1cHLqvFHaAq6ECtF+I6HJHrB/yjRZcU9BQlxfrfMkJiznBCwB0NetTfyHe0nCkZ0zQDE22+XfWRgqcVZfIVkmMeSzuH2eb7eIYVuekF8Oay5oqwlGin4ENm4wnY6gIM23fcFbZ0HII2vAHmsCcGcuNYkpk3vntLqeEYRGOVhZASqH5orACGjNytW5SC6tm8r559ZiC9FvokjDs29/HPswJoauXRpiZKngiyy3jWhyvPDUfSsNr6SBToim5f+/GzW8Slg/8miEalhn17Q1PJl46PZn+cc5oFCIrV1ApRZyA5XgsRpdAmu2WVNkAqfR/W3lS5QEOxc8SYItOCXWuHBOpsqWoEZ5NF6XKc3Z7vHNEfaiHVGpg/iL9QZ7++szH6+obIAam21xx1+8sm14enGC+/nYcV0HeeeeOP4+qylvF6ozs+CkUkzZCVlMYG1IJWp6PZiTuGPuRjk6x+QLSDvD6WgS7ruxPR2hFWhJQh1psy2OGr25YLF4hMG9m5e5qL/fPMAr+55Gf8YegQTWETTv2KpFylwdqNBaCrCXgxN6bky0nCr2Y1m6N+SWsi46heAjs2wGKZKuQllUvJibhoet5ygsuqjMVFEb9Ug8XyPI4IeBgzabWPfzOgHU8FwMUDz1wZUpBsC59YQjZZ6TJJu1nDHR7kWh9dW21i7sgOjtMwHoUrVlYVTX2WGKOY0YWFdII8tfNxHqgM+ADdWyO1LKsQhVC9m1DB7koaaQICK46irjOkNxLwgzy4kEnT6zRq3myhG5FoSaVDPiucADhGgqrNdYJqQ+8064FgbQ+TI9s96nLWbBYyZvnjeS3HQCtIfX9YYrBqcubr72ZTCZsxtFlRU6GtPaNNQ2wV95ekf1meCYrDXYeiRMzTdws3S7U2K85e1H3YM54hwwfGEEH27vDz5dKboeEM9dsi9NT0tiZv8mOy3xwmYLBGgf/+BraqwFe/HvHMDMAJZF/eFV2z2JvwPPfnxNZ2iqHSc7WUBAqAtSgg4ZIdysSWqWbQJf7vK/tOL6OuU7G6YijGwjzMFxL5X9wnd/XyDI5kTwTGzuespqmGQ3iFJnsMejL7EOMy5y1m0mQn6dCpLA09amNU2RObZyLGgWDx9xC5gaP84+rTgA20Tm6MVLqhuW7HwmaI9wad2ESpLzS1vRJTVi8PaxswGQJEhVjFWX7g2Z5tKG+wkIGEsOwAN8/2tI70rfHQQewrbVNA0GLMyL8BEgNoi5JGQR2nO5C6u3HwKcogBHQpLTi9LxhjVvxEnqBaAJH71FEnXEr6zb+VgVdRw5cDlPq8T+CvUY5FVDyDH/nreWGP4WZPJkso+z8vKKEgY869aS9QrknnX8MoZX/weT/0eKblxMjJUz3wmgriv0RaAzcdvrKz7nmYYq3rCaNypXhIhGVsc0gP+97OFgDi356aLE2hjEcPTeosNlLJGTnH+arzWXuayKh1c+mU7eZrP//+ZnW0+/9/DjPubvCYVRF7DtdkYH4IA2xX/kMZsdObquBpNPfg3GAiFO6+FkDosxI5iZK++dXwExeGvx/v92sEAP7w/CdEAtFBpLwjl4imsglRVM4m6WYGaueG8bYZU0nLu9xh/EhXLE3YfkUJ1ya2Dh2VfDTWzKT0TnR2SCj9Yt62yTCwGEQGbA25HtpdkOrvNj1YDoQavdotcO565lALt5AQmEq/x1nbydydUBHq2oLOWikgZ46RgZo8UPQEvdQn9MjttlusDBT33KFNmZukVOrZyBucCX1JhAd21vBvlYgeWWzGYoQg1v8TgiRZGd2B0AAt3keBH+9nn6VNz9WxsQfyIVgeKfKe+S4C5QuACFln52kdPxT+LW7lNEH5CuAyvfiCoFDb+gNtvNP7JZd+H1EJxxT+usOnyLeeK6n3Mi2hg1kSzz4x1UDb4sfU/DOJjGDlkf7Ejjg55uoGwCZdMtbSidYQbeiF87iUbNZwRk5rUlDfmW2Pq4une/5NZNGtX+/vQqghsd1yGy3sXqithLWFlSDZMdSPs4jmhMtU8vURB9gI/D8Na39SxNP6jT0DVrfupCqslpHTztwwDkTW+HazH+nR2mn3kiJLEE6OUwNKI5RRhlj0yNz4LsUw574GPj8PwtCgy4CPYJDw5eQEsCR/tqnMBLKcuY25fiftYYQMdFlEu1oBaD3/qziMeAN6Yf+/TizQYzwttahClfA0co5rOdAAmZSfswrXcPnGjNFjDC45+WWWhdEyrLeu/i3Yv0E6EQUsvqXeNUuAeR/6gwZrTO9pMBr2fRLHAGNA4mohU9PQ5Ow+KQgRThDer9NzHR6Df49lPMNWsU0Irj9uwU8lmtYcSvrbMLhfNljqOfJJjeHoXS9b3xQkExcTQCpdzNLoz/JJgMdHxkK7tBmODqlH4R1Hay06gxE22ZwwqYLdkZZfgX89lgA1853komIH41L1rKn0w43Xkw1q3DePssXiTJ3LlcDUzwKFu6vYqRu7uX2Wvfm0U/8CLMQYELTEdIA/R2XUMisHdNIjVKdZ5pCT+DFj2UuqEUkZBOb9S1BbeobwvoFcpiMvC/0k4hKU8JLY2NcwNTv+dq12AxlNQy86z473TDVUZQObNM6ru0VRwQBPIP2/AWhKRiQjWUptBcyoHv0Ok9x/eEeOD0A3cRELbrnU2LaAovhEOZkktWU4ku4+ujtPaqkMvhFsYBxc1eFn/1dZKKLuKshVPrzqNRORdUIV1wsHo+JhrWAOmqud2Gdl23M/8eEYC9lfyY4qTfhTIPTIpNt8w0wAIl7pXFPjA3X0sY9OA68fuEcGokNH0zkKAB49CElRGnlo8QGv7nxJnLWtavgwX7gR7bR1ghCQ/MQ5y2DZYrvUuSXojqgQXGIi78sUYhL1iLQ4LtcXhEb+HeKGT+hEUA8fOtbmUBMzuEkKZNZ/aJxj33CeXx2A30fL6p1vQzeNytNYa3cl6a12aW7HWGLRhrLjyrbLEIpw1+XKbzZS6uLIl1u2ykJiycynf80B3GkqbikNX1xXH64jEcx6KjnGnuwwoVve2C5TpJSLhF7tS9tZmgtr3dQXdBwc1aFPJbB5IUPyF19DJfswb26Q9/jW6RPwLD51i0yUD0eoCHh4ssQwa7jcj5bnLox+JXSd/3Wz2hja8t68jL3wxcuCG4/OEeJhzuLRWju4ZasT31AHK5tY0EIPxQ5QASy+rxg1o2hJCrgD1Hd1Y39tc0RNGqRA5QGhEdneUZmTLNUVx6PgevD95eMmIgpXYU6NA5GY4p5bHCGHQ7lyXoUYnNKJwa439TpR+94wPJLyAkfLyVrjR5mEvU04MVfHs5En7UEr9XI/4YBRj25BPL7YIEQKDo68r97/rt1QECewkKx545eUp8t0Z0HHS+fYUGhrZuEw52/xQ1Dj51CRrZHWWT6yixOidkRffJWG3NU9Jjj3MCNX18eSjumlSHakla44f4wYRQ33pKavfrIu3KMRZWiRcxL43JwVZkvwc/yvv4AQQzisK/zD3YxvVRIMQYqgGEAGtKYnmhG58Gc3Dn1PZsXXgbBWNaufrhJFBHu73U6AMQkmfi+bfMjDaU+uelO7Oil+OVY+G+GmVpRIj3kmkj42iRpp03P9ck5VYNnp0wDr6zfdmd0uXo3mLRFxK4fBNk98cKHj+Qdrnty23Ppwrth2HW4MWn+7nYW35IZzz2n6guCQCh8KcWl3oGceSk3ty5WYi4nb11uFN7sSY/i51Dqp8xglFsaf/7fB/+adbSaM0EgENY4aDsXK2MFiz7371qKbzh5kyyaCDTrI0kP7bmzODlEFTfl8EN3p/Aaj0hPbePs6nqbChNc34CqFgh0XM+DbPi+t8zPPdMeJFRs3mtbZLlftqLp45nDOOlmLqMTMXv90w1XGhdsTfVELAgHdz7l9M2AYTmlNi6puHgW446Y7eYZVkdbJ+KzhEKqEtOCE5q/fAlSKMWNQthzh+iC9WU8snnr9NnJU5CO3BwMh9K9220npVN1oHYqX79kYsdifr7J8spJs9zah3WhXjns5M4sFu3nA5C3m/6yYmqeWNKgoiaTDrNSgnrS0bR6Nt+R6uUiKNTIPqh7t0TS81NpEOXbWWVIJlqxI8bB4gMKAkVOhpUMa9S8ac7R5GYoFbIh+JT0DFiv74OFhahVf/vibmgBGat0H4lWWVhirEUdD6jSMkwH99rr+ug9o/pzC/XSW/dxPvVmln7d6tjbIMecNcZiWtg3xexlOUNACBmxszNbHgjOtQnGkRaIegGKGWlwbzEO2VvhIE04RCu8BkDjBz8m/DrbDTCYfDRYf5H6SsgrK+k3MDtsyniPZ9g1dwv6RVJ5/7R0/qFdbI/gxCm4QF27CVm3sH0v/4PEaNPBaBUOMY79VZYlWy40lWb5zVkN6ouM7E1BIM8lR00TZ2T+dwaQYR0ZkEs168Acl0rBVeAGnEwQ4Qunv4nDNwiKegEAOR+wld1TkicGVPSxMojQrrkZGyf2/h0Vit7cZcqWn14OI10/jxwMJejRymyBlSVeRmqqYvulo9cb48AUkengg813GlZOpKLOSxewKbOz7jefhLTe1aBn/O7NOiSOTKFs5Uxl8HVbAAoUzT6c3ClYzi+LtVV4KKGJ35C9UiPZEARFyu3Yz1HHx8gj5BaKAS6Wck3IJZgWQWVOVYUuZ3Dod4Unt7bO+3uaIW6bdg60Bixxjy12AwaLTDSi8sDhLfJaUMgH+kKa9+VdtGUmxyLD2o4lqxBxco2vYjC8wAeiIpAEwQsO1zBWqzMrkUTp+c+PO3A25YJntHltVFTFnsjqXqxhNYYSxMdbWoOgTdIi90RkTO9kkWBOFzu5s2+715sNLZkQcpfRE0t6NcGhDHRtyyM5BMY0HK4owDDPfEuTiC4ZfutdmRbAbxB+kraONYzW9vXbNhvlf7JG62ln11fKrmRE3y6FxPkPg8M3mye7X1UKUjcgj8HSf4b1JMvZFhf3M+M9Cr2kTjfWCgtkBcE9o0+QDJOqBsbL5b9V7ZHnHkYuIJ+4dFZi9d5TCoZPUTSJkuli2tFa0DDw/3dqPFKEswGZoycbyn8wlLTVoSd8nIC5wRtZNjiom9bHYetKiuuhfpMg7Vhg/FG4QpJDR67EltQU4W8Yd4qPxzNaST+2nl4O4hUY9X+bOIz4iCPmUdNeiF7JrPfHrQ43FLygJ3ow+oYhxsxvdJqohO0acaFm6LH1LPRZMfCq7wiCQN+ng3csKZGTvGFsu9bXk7BBVMEndg7E+SVzt68/gmlywXuvqZqSzLS372nBi437+MpCq6czQj/OBXyYhC2gTvz2JNUcRP1Z08FpSI78eEyfpLmRBXB/SxH/n/PoK1AW0X/YxNl5F7WxsZPkAB8HptUm9xwudfDMFIhfvT9OJOLpfjjkGH/wftVlyEobguyQV81cVQNI30vAWRnib8xuQOFGhcToHRkh3TJ36XueqY3x0nlNIDa2+/NfUHw1NWn1Aze9R9Izqnapp8KqPjQXJ09PKqtZ+qARWqaf5AM0JrSFv8kqwq1qaJu373Xp7L9naw0XJBdZ0871pVNYVCWdPihXIcF9iJaa0+SsQjEBvB8CNsVyZiHGCh/kLEYW4VCxkW9c8K/xX2E1DY3kWCX0R/6FRe8zyyHtj7Oo+nbgqooJzK2DNK/jkzkTGvnW55bOA1SHNwtkcGsPuv9GPrMACArSxkdMP0Tlb3sfHGbem1wnAWppK+Wi/CJg71Zh0dBhZ6xaRg7lpCzKrbQ8ahycuz1/+xcVZA5yjHorA5dtIetupFJc0rLwq/27YjiY6E4miCXvPYf4+9H8K97K94HUmdt1ODG/uiL7zn5NuFjggRFRSOK38q+658nfQFkcTqlq00KghR+5RuQUuc43JSmQrtIvPV/QRcc9vcQRnYCJ3lyPqCuluglCJUny5Y+sLcd7QApEvAy3Ix/7f01rtWgADowKrhxNmYsMdfYsUSSRxBn0y2Tdcy5fGHha296Di3lhUudytV9YWYBququy0tghQSBlM6WwPNlJhKz//2Ndlt1n7D1wyZfWS1+bHhE6GwFhWVS1jd5GeCqxbQPuXLMmaomN9ssL45X9wtovBl0j/9PQ1djT6Hy7GwdkWogErsw+lHQAPupeCLxBlyuuXFhXMu6W0aVdzwWIGTn6UYaKKqTYAY1ApAxe4lb/4quGhPegphUJJm87y+FH5iCfZtZuN30Jw9ZCNnNkuzuFYX3nswKb/ECjocSAxcA9Mr+mF1zOLDjcQx92r5VSuTYCZ8ZOVw/h7OIxO6cuR+pLbjjOjSDxB+XX7ZIuCCJdQrLmrvj4PDDF+4Uw4MwVIKEc8wNIcSBecwwi8B0vDbVoBU74yN1WqzHdITYdnIX7CyM/Jnd7bwh6WXZ4vYMlOLbWpAFsMcvPLu8c4yn0RyeDxAXjWG9O/PPy2zwRLwuNUefk0iylexdCb38iERCwAp7UVq5cejP0uOYnWzJxA3ei9A5lawuAM1Fj1xySN7aCEV6mSlkUJovgQ1VvfoUUf8wlIeU1Qlrjqk5pwkd/O+SzF9N6jL7EaKQCAGLyvCpr6ECXm7iIWdJAZSKQ+VNtjFcVD0oVtcGC7LAkZK6ryCmJgdTPPQbOalMWcAiYOVje5lIE/pZ62u5kXgT4+7N/tz+Ngl759enRN2gJh83U/DkK0mclTtYpr9yLr47XBWezB1Y2SPmAWp7abZHJhlJE/MWhVF/Q4P2GScg+B27fReYeZv0RyuWefBrj4mGBCztXu14ZWyAlzAzlT7lrjF2UGlAg1aescQATwlRI9N9sZrpsuHPkhaB0y/bUMNYCvOpIkY+GJ/HpBMrfpO6UkY8WHmEn19olssdAasfy3/aGbW+78dRRjK5mD0AfRC2f7Ad5SbTy3fVzaSW0OqgWP33RtkCyxQHfflomppMf4dMEoL27aCMK8s+k0F2XsO/gJDKgvGsctTPDZiYwYES6kOk9GSkvP71cbK/k2strjG4q1INuFER5QnMl5mLar02lBwxZDHWjP162e8lJ+pnVHwezYViNacCrM3p3+ZNMTUaFrtmVrLytzyCblKCFgzvi1V1Cqi95gocUUd3R0bDEeZjtqfSo8mv3c7/2FOi9I5Ti0FnpTuS9ZlW9deCObH3tbjTNd98y3/Zu8zM0YQQeVEC31kgLXFr9WMrvlgBv5d+2J+H0rP5EiXqyiXgqreupdMTYbcB81DxHyH5IwRU1O7hWQDBBZuon5aQ6ywVPUTjAVVS45cE4ckM9KC9H9oOhbbe9UoK8Ow9sEwYtpe1kiHVtrVS2NO83u47YQwdgYYSt5I5zeQS28T+6liYzwlKm0mms64wxgrWYWqBucgWIPVueCyhRr43ZsNEb+4KB82K+Msaf17MDOxPcaqfFaekVAzffQjuhJyhkPIHk/3vN63YCn8hBwIdY8ACsf22WCU28zCKWxMbXRbIgZ6zcJ57QisjbtaqATQjM3dFEPTUurgtsDhHLVNPhPHBgz/hmdUMljV1LeEMy9vsMCqIbzQ6cwcNLulbwNpEASdxjLpVZhdeqZdXc04g7h7+mGdCOf/YARWsmCOORRVEo3iHj/cTaNEClX5iRUZ9Nl22IGDeHLQBjGUhAg2wPR/1DrLaKGujhfwm/uoqc9bGzD2UMMVAmtDZsJBdzHb9Sh5+BZ771sWR2oLuM2RdV5bO9una72JHq+SX0vX83JklqAm4K3Br82fHOYAzK1Ug8gVXIvE68KUpwIz5yXZBN08aWMbUIsOnuuBvv+EI7iC4HCsUOyaBnpRyZftP8HGghKkyrkNA8jmBr74UDzw4Ohf2pYsGzHdyNCGsGTnB2PkCCnyzcR16y81+aa7D//wrBK73aXSIvcqIocqyyS0Ge02a65U/7TG9phmP0rdWf4eisdTvWpip/2GEtPBXyLEZihDhwz+Q/JOst6GVEedYDVMck7dbYr5RhhQYVGzilhRN4zqWICktqUIpi+46nz+c0CDHjOcwEdQCdnX8dR1Q6dU0VueRdlWdGMa8UFFds/UQaXZctSidJRLbUYe1wKZh9nyzME/vuJozqh3902z6Bye1BmX1XDOY0oYpSaEFOMyGcTSMwyVQWgGxOE3UgJuPiY94Eqy8ssuL1ITR4J0wcR5nSphjYEcsG/Zjo6IKVy4a/e0sAcJwviBJ0kaP83ojXYwHJihtAoNnphYArqliaTbRbqoNwvrr1X3J3kPyzaNUVyZ4oOLYZWUIggHNrjBvJhRuUXlergYZO+gYh7ex7Df9JghMNPSKUJImU7DcCDLPjXE57i+YWH/WCxfrK49Wtm9dW0bI3zaNmiV7gClpRe0Ii3WY9gqjCj501AVzVtXYuKYYQBcxh3Cc2CCEJiOXN/34cQHGlho3lAFG3lLdYRIMd6c1K6OP66A7ddphpNizvjAZn6/LPFEbgOJmi3cYkeYb9+p0puH1jPOs//PPTuYrYnxWc5dREWr+ywEQklWrgxjHgoCInbQ+GF6XLbagdZyuhPyRMj3YHzg4MA5RbQBc6INPr/l4Sm2htwQ9MnpHYPf7uE0XMktw1sDysDLSS6xZT4RwTuqymbCJ+vuvrWOLpp1bHdZyRXFL0KIuxmVFOc0jFjvMFrla8eYniyEQ8xHwQLLvou7v8fDokJ9aaPgIeJ+X1+HqOOqowKoXThT9yr3soRuEfN8GSatiWQr02dcTPKURh0jUHTVs+DhDQxQ8mt7INOYGyUhE31ooVtcp30Le7ORtVb9HhTEoFgPfUJtNo/3vYHY97R5l5A3+Xoz2k8fRQV8uTMHVT623bZU+P2+D0pue7CKk0Fn+HFdcRVwfBxieWHJAHaCBio+d3rCGSrLeJ2K2wPQJioD4ZWriF2uNiaB/2bzkdbIF2pjItNriDonnAX5ez28sLMR9Eon0eE+x3voA4ImmjIf+ixvVmzLUzUdXgAr7e27hgwkD5Y5KIBF0Hw5db6igk46ZDdVkLpHQX3KRp4TSc32lreCeR+8dm2Nz8HJy4Y4V5G+NTVXJG8T9r/NuO56bXrOhqN6Ln2h0Cm1/Pe7dsnVtYJ5EFoH7dJkKSXclDoHCZLluPczpWhUz8r11x0oHtFQdf4o6fCRyZ6e2Sa48jrdeG4u9yXq+QaPFp5uyEUDW7QLrT9pym93WmJR/UIkz/uKj+C317C7TwMtR9tlkzDNBKGqJrTsKocOQu5+h6xOdO4WxOxXfcyfMncLDaeCzVF5VgmdeN8JSyP04Zv1HxECrwVxqTrQ0vF6p2Ls+LNkc6NZnLNTS9LxhAmZHp2k7eepvCucpamNuJ0XojyJTXsdx5+eUKdFm2OQBARfzhOJ6vkGLUJUtAkEDOMjnk/aSRu/2scpN/VHIjGXrkOI16OTpJIWjO13yR+Kg6i0WpcO704K7tI3sAzV3StWwWJYJCfeXXw96dX+TnIsKS5N6+AT7/Q+N3ly+obPtgGcFJqu52VA78JQMoodrwu1Dj3yV7YbtjzGOWN+BuDcdEqtsOqicNt/ZPxYIL/bp+JOo5M4u8R9CX5SXlRqKu/s6I5To8W4IX2PTd9UuFsOmx3dRymNhx0r90cdUTuYNkmwBqxypXSMHAkFWmkH22Xu3ucYbUpKSaIjfB1rcNZKjOuAqc/OJ8HN5UnYIzacVzExCKZA9jaJqg/z4V0m4aK5PeV2KMXHlv30KrBmyjMGgMj7COrbuUFLr9cn4m1Z5sxH4xNICocHcH6TSmRmGcSjlofrq7Tjz8E3H44MmFSYj8bRtGG4/0nrKo6gzRTf9XEzU3xurx9KQ6cf36qIFzquoaCCOdQVIv6WK3cLheDquIy7+dz7KvBImluyxXQiRR9a97nY1v67Jf5AORqqgV5U2191ux92tQPdfMch0YoMWfW08u/5v7pQeqbZC/MQOZqz8okbz4Btz7inEBdhtS6d3m095z2uxvho6jPbUyAmGT9Bzb9j2S2pWnpjDo903773HRy2YzAOV88HEBrkQGoTnVjJwUn3m8pXRjtMbdYI4MIf/Vs9T5/X4WM42R4oTo8oOqLYP5W5IUksbkQ8XT2uvGo1kG6rdm96Fm0HLMexUCq9kh8W3h7hPsDsA/ydp/7ZsODz+kA4rTGLvFFUJ9O9zChLlYp7DWSt+gT7BSv2RlBl4CVvSquH3TVTO3wLBQwBOkWUbobV2PzIFYStCq6vUyOvc6e8MFNlcbYTn33xRvNd7iIebADLX+ZEVzKKk22NwNyxrXJibGcnTWHhxw/xArCFDaJAITVc5gXHA080LfFmdrvJBeDnpEp8wqv/kIrX3ufFaNdJjAQ+M5saXUeO4tvVJwgcF4VKs33yyCQH7xR7VK6khPEn1jvycK77aD7s9aipCqmlqlQzwzcbvw3HzxL6umb4YOMOUYNA+LRupB8c+cvS/DPp0r/ZsI6rUrKJqo3AKeAb3NvyfXzLlofvaXA4+kq+LR4+xm5vwG4ub63WuYXhDveT5QL+48Apu0E0V7p79pi5Aml5J/pfsx3Si39wGJ8iYfdq3LShqiqkEKwhG9PfKSi12euA5J+B+SmwjAPvCbh1+hfEhH6noJ8k1KkFfoVh1i61B91kiI1rCEZaueiRsN+5Zq1Vd3221fyA2BMHiku5czZcRARuXXG6s78nqNuSZ3DjGSo+gLXtRrGywbpPcsxTM0AqUyGy0NSMfPrHaqN7jcNs7aVZKbjdcLTB2tmXu/exp0jQ7OVFa3wumOYuRv7oosq3rVNoYnrPdOGolGBBvmKgvjXBPfU40fVA12L44VsCXwbukd1XL6YBoyqsYccPlkgaYV0skCiT6PxfwEarNFgYM31ZLh4VG4ujDAkhfrBGAG9Mairwq9EzWDzcZb5Nsr1sLo0nDX9L8NVxahk4UXYoHYH7XpcvvrZ/OP6WbwHJk2+iulBoOGc5qr+pQOh1enzUfqz27zcjOQXQTlUtNZ5puIlk+pFC07kqR2NyzGIRs7icjujKgem5yZA2RH/VbQbFPkeFBs/nPP7r5u2m+JoytEUQwnf2iTXnC7fyiwuiT32fQUfu0FDm5NjjRFtOZQ7IaDvtm7TqHtYqbe6DmosMF/gFb7XeZsGYzt15WBFVOBRJxnfjBI26GE8bHQU/ZYUq7WHB2L5qkPQwgvvaOxoqHzT8TdeGmPev5Hrod08KVT/17jVWtJ5wHxxPY5Cc3WVEvRebtM3he5JqIy6fyN7t0Ot8O051gIJw4VKP5iRns2AijCb6f3ywAFn2mUwI6i4qemzlZ0kWLmV88BURg1CwJqN9w2O3m7DxpxT1Qo0Evzwcypy01Z3zpsj+qt91pitC/fStp+kORZSQwULlVU7zmOeGlPdRrwIXw1jJBvkUVwSD1kBdWqmbjNE2vEaLLiNSpMCF42nRF54P/u+aUxOt92wNmXceCQVyvkywN3AfoGg2d7w/n6P833TwEbFWcpnLQLu3fn4a34gJnkuT/ydKqTH/bJb9qd4GUBMeJSMZbduiunqaOHx4pq+SHFXSZw+D8smC2oUJM7Jak9jMzF/NVMAcMtpNH+lXG/cUX5TXHCz2tjk5mZS3aiRkd/qTuxE76nfPMfYsiXwbDmDig2WDMYltwY9FSjeDQIw0dKw0kHTn6TcQSLyPaAM3RC6ZgLMttbE1cFs0sQ9Sl7eRhGKXz9PG/Tc9E6h1aymwRBTs1c9fp2FoagfRX5c36U500p44N/Azja6VTtYf0kdi6S9V04vGkmFk3BVjJGlNnqrM60HJHKsPHseu7NQKTwLw8FKC+dobRy0yhioh5iofD1ewWOHsEBzYuww7gxu4RvA0V2PtDRxwnvGU6UM0HN1CzoE3LPMklth/F3GHL3fxP3YO+u4PUU6GO4Dwa6fG1TPLp8tdLMxvE2GDC7ODqJDEvSQS/BcIO4vEc1Svbodb4IsnK4c6NB58wSuvUcaaXqdGOxhbJqbNv4UaxKjYrI8lypn6NNv1ZYyYXVc10Dom1N6ZnXsgXogzX62EkmcW4K5Z/qXPFllTg3CVAWP+bPsOQj06cGSa4JIxpYHQB74u+tTUQYLQh1X9Gc8+QHm/95///C9qUbTq7FxmVaSmcWfiKk2ZEuI9cDLJB7BIYx59WC1C0jgnFY0FUSPih/Z17ZfIwj83bLWbsjY3Tkyjo0rWSEuMuFQzSYctFp1ljdcisu3/XN50IvDUqg2nnwDGu2vu2O6r7NH5l+BDfkQdM6rfdA1FInZhEuJabe09eL60PXR9ReMYuiGmv74Kol/9+hACyAg/mkp+8Epx3YUyGXCedTW5YHywDBrxZvFJC8YkL4CUz42ykx3yj/3MLpa4Ahy9DJA4bAt7WWl8UuPrXio4rV6F8kzVHxW57/O3v30bL1snbCKHOJk/mfCQogtx+7vNc7te3h7mPZTEYaG3yw6ApWdIDe9MDcyDOJgyPvFrlGds7W3pKJj4wXKRWMIhjXMqn8tJCNUFakB6SvzSI0snK5lSKp7b8EFu5rQZBM5wKHVo8Yd8QFQqOG4AZHk4VbpxtRG5syAPhxpGfGOb5zJesg91xwZUtwRXP5CSHKvN57Y146oOcasXnYtROtL1utoFJkIMFknlx5VqqsvfIK+OKBBrjcRpiZd35MYBNZQibZp5gHNzBxyNKe3d/GYcW2WGiR4R05hxelIcZpmLZDdIXbjsh5Bd3IXPIhDW6Yt8EbWpVzRE8EZiV8QIKSy2NL2EhS+usmHsBR0kPgEOiaygBMRRnLu0eFSPkEjinXgzsQKaMqX/bNeHLVr4k8cEH87comojWKyoju1p1DvTV2SpsvNBwre/v0OAPGN9drwQyZImnPlXxYSpSMxYAti5iHMrMVNqmWXfXN1WxqasqkE34hg9cZgL/edFGxCK8XBcYpJ2l1sHiIfiDKGmFgFQ6kwZ7wnUGjD/9hN4rzfz49lDiO2igj1uh/K9cBBAiLXycYlRF7/LUpB+ssnAlRAeqwOpLSE8pfdp4CCYQA7wrV2QU0j9rcpNS35ngmG7/sgjKnoa91SFRq0wlRn31CK7kYU/uxNvJ5SYXsNB2e5boGVTxt/eSs4DSmYkFsy0Y40rjcpoYIA4HjJuZuk7Ud8MDv3A3BuOeg+hLlVZlz8dDusHVVsZGlfdL7b4UcF8TqlFyuZqLB2XNpSqsSxr8r7vDEFq9upHCuvZS3SiPHIDb/TN4Z4RWorNDKEl9P9TrpIK5937EjIJD8wU3vtelTEFfSUQs7GDZtnri8dEu//E1+jh12Q1qImEs+rf5Pq8abyvf2d806tacARfpSPzKzJ2X6SYNw2k8fcAIFN4Zs6vQiVqOcgg3qwRG3C+HRaagXvcevFnM/OCvW8NdPtcLw8mi16bFF+BSwVjnvPNnxbrl71Se9mHKvXUVkkUUgehu8DS3sd1QWpWVClB7vKONHv+cgBHJqJemcpX1NzDdZVXG2wqWgz61sKtN/IyQnxmr3IzmalkZGFHslHIK1zZLyyGfy40O6FOlk9BoTnsWrHimi4qOhnFv6+6P4Wn0kksRxNUbxz7q4kJ8WXTy/Wz6uSKIeQGBKu2LFtIhKt0sIUHXZQ0YZlqlhA55fE27nU3lBTA79m1GVLl19vb+cq0RIh2nbgt3wVQdkfcPolWOAqYysqpgObi3vYN8SD8lghRNoHIt5cLXxTROJ5MGg4k5Pxb7nW5cvlPezmR/fraTNLfwA1x+wjG/sr2blZe8cjoxLvPIWD27Zjc/P1/csP+6UPVzN5aAFh7zUinCaP0CMreIZf/rBKqEVbAD7lPNcVMoCecAoRfKn0zLQ7wh6ZDUtc46pyhAQ5y07aP1w4ZFi4lncCIZOO49l/8stNKrLPNojgAFvYaCcALGk/a/h3O+bnn5IzKWINnicTvv72MyD8UNvsL8uyz9nB/EwoDPskYR3tXaYjiVuBqPR9nFwJEcLvr/ktcllK2jBHnycVVXYyss/sO2DAA6fdOD6wxAipKzO6MPRxk0sHYUe4FJXkNe6Sl7DdByuRd/z/x+L8kSRXQHFsNPqrK9kS++bs59Xt9/sxlXN1rjkMk20Q/2R6TWxV8QBwpAZvsRX1QibUfukuCX5bRFIu0PkavNf6BHSQGLWPlNSfOisIBmWHWr1QpLefDN06zLTXH4qiKHbR1EwUndIAJ9Yjrux+KbH5JdIdPusY5qyAUpBzag8L5sddLjmoJCRFSRI8ZHMsl50z8b/voSduEW5dqUBXg1PoW24i0yzVGpUFUNq0mgWHppkFRef9IarjYW9q9LevvTMxoDI79nIea+lw9axCGntZrqDc196hgCURDny3uef1XOgovV7T7pPrjcc3I8kLSVwOijb8MkNUznjZ06rGj+2OT1JeHMHUwrJNAAEwKZ84j3FuxsM1c3xcN7TSvOFncWxLwEMc1pSsbjXX4cPAnySXnovEyS5v0nyO/1IB4plHez38NBAC8ABdZFdxjbRr8izVZfmdk8S22igkuzn5aViv4jdmfOIQG/LH2u/1+quc2UI8tlXLKHK4JewCOdotiFxNhC04vQaGrzsuEqq8QIbblV5Syz0yXXJSPhNLurIjy0QLPCiF2WoANozj/6Y1gtPOM8FVM54ScuVuzkvePWIhcF7xTAxWa8VBsVbCPDwcUI+iHsZizAuXgrmCX1AoI/1AU7qQM/dLPsqkULVMDxiFFSrLpsf9UxhznY3BOlm5dQFYGa+d7TCVXwFoyfM1LYg3TP7u7PHQypBSgHJknh+5KnyxQTF8S6/giINKHgv6l/uCoWkTf5pdYCwkuw9UPzTQ8SNUFXhIVKiWg1uIFgZ4aDitqn60nAb8NMvlwFcnj59mSVUZMjy52OrBnA7r1CHn8XiwAankp7Tx7tWs/q5NlLYdAorY50VENRLrgfTWGH/ZTQDhDjloLh4N0sGvFRb+8nNSFXQD3IRydM4wM96tMSRVKi1RXZVjhHlNvv8D+ePkJR988zAyM2DWXCen35DEqm9YwuxJ0kwCRnRA0d0wMGiCrBJ3haT0Cwah2mHoNzSfi2SHKM3RoDLJ0gwz4/aAetJVt9mU7uIryENYYo7u1HywN0K0jm2Uv7gRGb5UU2lP8M0ZY3EQTfjwz94gt/DsKGZpRvjUAnip1LAvZV1j3t3tHKAMYwrkhEIRiRlgzle8hwxjlgIsZ8/OGch9IBdDnO1SOR4wu4Va86SYy7xPr9u/y4i73hPIvxAQPvcYflhg659BsBfTfK0UvcJks9Bjs/NZ/qqATyaJJINZmgg38Nv2hF1aGO/Zd3LynojyccZgnwEUwQ8P72cdhOWsALocJT6EkcL9KATtANpg88FeuQ3pPLL38H24OTDRzGrsEqnSab9ofydfWwida+FAqOiTomLCfUAmzQTZZeCYsKZrE5UOoT/SWFBUUwwzpMCmDdC3sfZY2MZegWDFMq4MArM+GfKWwLSM4ek9hX9cDrEFFb5FOwc5VPpvR/jxvRUMTtk2j+2cp8s2omBQtZhiZw2PX3eHMzKyVyuwYt1tRXk9prit3Xo3QQnUAV7w/9tkzkQ3jxzVydjzt/X1+nSHJuwTB1GecT8pqwWBCxbl2xGJ38wOq7XbqBsyfJO4F1vInooN15jZM8SdQmPg3EajQNmi+ACa9LP3W7woSqPyK2uS1dk4Z+NtKuvs4O8AxhmZ286p3WNsqIlybS1lu5dXWZ6AC4/pMDHU2lFifaZDar0/6CO4AcLZfvNZKWZHeS/MmDajpuBkw+iL2Z+rip/9FJ5wODwVLxVQ9UQYr0rInpVd9FMuTlTXCgM7zPZcDho3Zd/nrmYMzx1kKALTzz42O8/qs5S038mAwVKMEGW25I7zMKFmNVGUurmtK75LuTmPOOAkc4k2Vt9rnY7S2wQd6rWEZKt559cB71XxmklDGi3PAilr+LTkI78MPiudkYQCTmWGPmt9w8YVLYU7UPJH8v+/ur9u00SE7ws7Ga9/kskcmledupKCq08IGUVSvQmnMSNlVMpv4axdWkcvvJRgm6U1RhhfZsQhFT1/qDgDQzWxfEQ6Yx6wELb78LACOfz1LONPAoB5YqCc3VF1YLtz57LMFhMTDVFOWjGaLKycKaKAUmjtMYLk/klq7bzVaSWiuhJUTckJEUWSLamHtvqz2jBFXAJ9f8/6YPXQ7CludGhq2SgpMXijG/16P0BSiGSf21jZ1W0wvD22og64J+YDKXAtNaqRpcZLmfETc/NDPU/YgdsyWr3fn8mLekX7bqVPxUd3KkoC3DUel6vWApauRwr33AaoPINcxUreCIVdGDklYu4Em+nnpc7aEvyUQ3z7PnG1V2NY28G2DsAsc954Sg7JnceXWWwL3iI96/kdRR5cglKTP8C7FJXHxeGZ9W4t0JM3DRN0LzRC7L0WBpkxKi/ZLcfOEiNA2E8ouwWkQn4ievMoAid/Q2HwGv9h8FO+ehNJSYG4vhSC6Svqj1/sGk9dJ0XghRubcIY7ZT7nBZa/WfIScXniW5vOy8NAxJy/sPdapea6vTkNwYmO3PCIQVp54zEpOCM7r+t15S1Bov3jShuxn7jIP6n6T60WuWbaE3HmR26uty934q00MWH9tKr0MG9zTggsIychA3usp4O6lkOgNHpoXmA+hCh97+xNakoGa2RPACYIiE2xtTu7yuE1vXAuQw82JYRCVzSygxPQjn1XujGK1CrmjGtuf6P9VF5Ic21KLhJYt+57yF312xVG+9QDJKJP0u/KRBgAk37JSTTjqHuxHIGyPrPXccYyWRu/+BdJ45znRkycui/OMido3EWB3CivWEHbVXufUqZRvNwpbGQWrVyIR7rk/uUQggsOyvmN9N/NcYdWs0fGwLAboPDUPg9oT54xwcsjZ6IALy2n+hBMXQyz/D4V70/Lbrpkl4SRNX93Uyxmf/8yVw1CLr/LPGRxmseuHRsbhoufka++NjGBapEC4EeviX5DFLo/BV4oNwDsnyuWFfvr6ywNKD2zceRawnThDvpuAvOzIeDUmmXULKkeS+WRXZilpaq+AWjPxBw4jlIqe4LegpKHY3Ygz+FYcANMoxSJWMeMe+pXPzOTagXOnkCRLW3Vm9mV5cC+ZiZY9N+sgLxTGMqCdpe6qiWAMpLlGaWDSObVdnlgDWfcBvRCnTycekBLZ0RG0csvABSay0Zb38hbhzyf855rfQ5ID662CkYo3Rrxq3HB/TuclbXsH400807a13Ok9JEScZobbpyEuRq0lunm6+q1mPJLlos5nVXIQs8CtSW9miNcdMpWTq/8c3Qj4l92CJL9CguPmsqt/nZOnu48S8PFMdyGl4xu2/3KMviXBiESUGgD+0thlc4Eh5jZhMri7kFhkAbPA/Z31efNr9tYgB4x0EjkAOZ+nO6n5lgxznmhOG0LsAji9vKagcb4lSYzL76qiXdrfnC8Gwtaa0FggTdzpzSFpFBIR787GxI0Yh6fm3lQBwjSkWCvn37NbD209njrld8Ia+2qJDD1nAafucmPPYhayTP1ntUXgLl2dlaIa/mOVwvLRzqUMT6l+4GPjwNLSUy6SGM8hF8MfeEW16T4hD5jWssswdXgDdC8r+T4d9++ks/Bwy/4z8T4A1ycvyOEMoRDLaQUsxtJYuzSouBb3hAh5rwX8dcesWy/Z7yJnMzYAmO8esTet8yjnLk8u/su0VCPlZ/neaLsTAqn8Onuq+ipD5phJF/LuJUNrrkCgSDotv1iCIm2txBVHatfkcLj2p2hNi1ihWuqBrT+fk+W3Wp57WNrxIBXNHAhhPS00Q+Hy+GM6qA3dffret5jbfV52p4Gw1+2XXx76iWj8eKhb/DI0oVlmfGPOl8HQ9ftLhk2f3PUYsdplcAfRgKoMvYidPVCHKGt4cvKnsykcnBdsBzn/3485LDFbEe8fohY+AUqooJZ9Ixft90rYMDffmL1w+cnl+HLsLUTo33f7MPEUtYVpwnLquH+tPPDeEwqyh6rPqig/bR+7ECF3PrgKIrOMLruOnaUSmq2hHoj+wYd2jvglpkxEkCgh/rcGw2oN516bk38jP6K8U10Otr24NRbvpamf3emSc6HDrFv+aEscakO/4bAcWaP1izfEHyWPFhbrvwVTOjOV7rZx5BJSciPU+366pyFh2ctRrALv6oHd1SFxvW2ibr9yO/A0c8SqGiESLT2lzfKKpgcylwoTFTQhNHd0nRVwuxgiWc/Jc3/1nqx4op7Nu1+8ixz0V1uM2GToPvUN7LgimzmXrtvg1C7rQxaYb7FtQ6+sC9GUmGhLkwGzwq3fPMJynu1zP56UoH5UpYx+SkMgMs5vh/LwEaekZYwpk1n3Wu3wN1NCWodcjytywrb/fN6FoPkru9yZmP/blx29pfU+CouqhxIeb9cgIhYGJMoy6fNpBRPna96gim8I6F6N5lad6KITW6S1wD/zUOxhsmXNxKEVpWQTv2EvJw1DFensibo+6HJWC4oiWx0bdHFqxtxulZl/9VsEc1YXnxrrcotnb8pkCOA/ceaz3tnw5BhsQy5zo/M18KpE1jOpqBt7O7YlagKXQFFtmdX4WTyXxFjWRkygOP4PsHP1cWYJPeyhwnMBmYBlS3Jn/upLOrr3sx+QPUx5Gl1xTse0M9U9OMeeIfNCjtsMDHQcesd1qHKyJe2EbOEuAxtS+nqS45ZlnYKsnRxW2ax5G++8ArZVcrG24AB63ApNdmydAoy8VcmoieaR+9ySeYn+znU49ArGYG6MqTXIBnMQE9apdMpJXh+3n/9X+CxoHuQfy6MAIzr8F5Wf7DMncKJYfhmWXPNrBMQNvHh6q6Nd3Q8ERtUy1ySw9j1sT7BnIVIYuNL2Jh7yoPBNrVLEpRkEx21uy1TNlcr+uVnfo0T7doo9VYMK/GsSWpaQ/i83GjMy9dBDtYMCNuVNTFqwGEb+osTgQLuqTm3d0t+KdbNrTz+V0nzpWBQCBfaH5gejTYaEdb/9ID4Wqo/KUv9UHQfUPymc6q9ugFAwX+W+7iqiPLDLGe+5ysGILK7NAdA/Be/CQDSipmwEWVfN1OHQSsc5BIMelEAAMZs0wTseP4tXEOxpnV4tLA7W9AX+1GXhP4n720g8tHSZvQYwRym4vj4gnBKNHSLOK0q05ouBUzw6jtKWWbN0UzO48ON9T35E5IS6ElJQlWBhlQ599eMD2IiepqJXuV5Mm4EhAOey/qau6soMVG6o+H1ka2CwL4WO5xX5E2bkEwzz31m22eoZ85Ey5FEqsNyEckIr1XgDs8I0MgWiSbovKDguqFQpShR8e2TGvpOvWCaWzAs1VhZJDkAI9ceYr1OXYtGcFro4pq+b0C7g8hIv7J4wqTKUGOu1pgSoeP8zCXYo8QsgQSmuEgA5CgRrQNP4ZkWI44FgOgde9WkH0MVhoxnTzJww1GhMa0b9Jz0XStjhiTg6cO2siYYMRpzlXiiTZCfgWOqF34TZGiBaYjQUVQYyoCXkNrVvCY6/gAvFyfwoc97aBAGnjFxt2x4mXQIAbX1EgbZr7moD7rucG9p9GO9xdEcuc2L1ov4GNqTcp0+Q4c+Q3zmaOuKnk01A/YDPlW5r07pFfuq2w2AIAYB6FKddYwd/sN6Nvml1muhM/Q5p1Zg16D0Eldl0h5JGTE0wpAtjm9p/nHZ9MY3achbvHj4Ql8cFZ8rJayEhrUap+4+kvLBdKvq4TUAFQ/PSjpiVu9utU2HLErDoLTPgY5GFUeayXDZWlFECdOhkrF75ONdtfyRWDk4Xz7Y8CLmvT0obNVqhKmbkonyJ/P9glyxHL7gA9AAoSEZ43yz3j1ccAcRqi0Dff6fbwLL7v23/sycrko0fowmm4jybwL1RONGyBt99Bcrp2Y5Xo2zXIWgOa/u0Yahd388yQTIsVmysbTZ3K3pKtcJtBBuMeqZewpIbtLhT58hSUVlA7qpWgERYkxdJ8qO5oqhqjTca5LwfUIr5n4x8qNMGPQbWzvOL7rYdB7rSmhkgcp1Y6J1iY2oBBSri88XmQJb5Ro393kxWMQmpb1dQvwU/+falh2jhWAytjJQGuwHeLgJZw3g3DmtQn5/wfx+xwZMjNLQ/z64sEE5N1VPQhLxhGZnHpGLYTR5LOJvUO3I2yvXQipfz8XYYIuyZJc2BfbMvMFpnf6dTP/wMXd0G5yzj9ID1RIzDooVjUHf1piKD8/xYmrf3jwgN9QAzHdmwzML1x9SfHZ89YCXCLDKtTYRGmPXl8atXSx/0xpVhx946rfuxsk+66x6gMtKdt1dxH2wM8njeVgDQOP9mt6OG+mNQNq9TxMUkvDOX91OuD8gO72UHKJUBqnmMzZat224I9rcEfKHZnrlwZveC94Ei8N8juuPKVFyFjiKluRRGCwtG8PQzOeO0ztpPBHf7OcGFiQG9mpMZXv2TYx1G7TdhOFpeM99uxHIlsbHti0q7c4oT6apwcFrEoVziFQ+rEOu8EwKNW2pfk17aj5yTKLd1J248ppZ8ZB7V4WGAuw6MmNvf7wyBFpZ8SMCsJlMT1VEmupjiRiWvhD9vobzN/oHKOtDsm/nlcmW/sSrEOZsTLr5tmYSfEvXL0/FpbFu7jMO974Mzg6dOg+DUL4mNX0rpM8nTJ7AxM5WxpxPcnIacQGhlUFlpgt+PGGlqJpxNkyHMSaEAmB/3k//qJFAS5BmasC0PrDmaQ4jD2BaLBTGZOhNvF4U6mbJbRyIriYymvXoZl+jMAKMT3s8MVHHdCpQJnOapfCHcLzdD8NmS+/v45X9jpw0Rt6OIiC50SlNKOGhva15JAvIcxXTMqDir9gVTUyzFPv650VZBM4+yBp6Z41xSRAuriPTlPyVffw0alYdop+xGwMu2UvmISpvmtc/0lLfJ74BL2fAx1el/He0QeFMDD4ugUXXTkP6PuuVGysKMAAAAA==" alt="MK TOTAL SOLUTION">
+    <div class="client-entry-title">MK TOTAL SOLUTION</div>
+    <div class="client-entry-sub">Enter your details once to continue to Plans</div>
+    <input id="entryName" type="text" placeholder="Full Name" autocomplete="name">
+    <input id="entryMobile" type="tel" inputmode="numeric" maxlength="10" placeholder="Mobile Number" autocomplete="tel">
+    <div id="entryStatus" class="client-entry-status"></div>
+    <button id="entrySubmitBtn" class="client-entry-btn" type="button" onclick="submitClientDetails()">CONTINUE TO PLANS →</button>
+    <div class="client-entry-note">Your details are securely saved for customer/admin records.</div>
+  </div>
+</div>
+
+<div id="purchaseSuccess" class="client-entry" style="display:none">
+  <div class="client-entry-box" style="text-align:center">
+    <div class="client-entry-title">Payment Successful ✓</div>
+    <div class="client-entry-sub">Your Mobile Number & Activation PIN are ready</div>
+    <div style="font-size:11px;font-weight:850;color:#64748b;margin:12px 0 2px">MOBILE NUMBER</div>
+    <div style="font-size:22px;font-weight:950;letter-spacing:2px;color:#0f172a;margin:0 0 12px" id="successMobile">----------</div>
+    <div style="font-size:12px;font-weight:850;color:#64748b;margin:4px 0 2px">ACTIVATION PIN</div>
+    <div style="font-size:34px;font-weight:950;letter-spacing:6px;color:#059669;margin:8px 0 15px" id="successPin">------</div>
+    <div style="font-size:11px;color:#64748b;margin-bottom:10px">Enter the same 6-digit PIN below to open the main application.</div>
+    <input id="successPinInput" class="entry-input" inputmode="numeric" maxlength="6" placeholder="Enter Activation PIN" autocomplete="one-time-code" style="width:100%;margin-bottom:8px">
+    <div id="successPinStatus" class="client-entry-status"></div>
+    <button class="client-entry-btn" type="button" onclick="submitPurchasePin()">SUBMIT & OPEN APPLICATION →</button>
+  </div>
+</div>
+
+<div id="lockScreen" class="lock plan-lock">
+  <div class="plan-screen">
+    <div class="plan-logo-wrap"><img class="plan-logo" src="data:image/webp;base64,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" alt="MK TOTAL SOLUTION"></div>
+    <div class="plan-greeting">Hello There</div>
+    <div class="trial-top-plan" onclick="showClientEntry();return false;"><div><b>FREE TRIAL</b><br><span>48 hours • No payment required</span></div><button type="button" onclick="event.stopPropagation();showClientEntry();return false;">START →</button></div><div class="plan-title-row"><div class="plan-title">Choose A Plan</div></div>
+    <div class="plan-list">
+      <div class="purchase-plan"><span class="plan-info"><b class="plan-price">₹699</b><span class="plan-label">1 Month Subscription</span></span></div>
+      <div class="purchase-plan"><span class="plan-info"><b class="plan-price">₹1800</b><span class="plan-label">3 Month Subscription</span></span></div>
+      <div class="purchase-plan"><span class="plan-info"><b class="plan-price">₹2800</b><span class="plan-label">6 Month Subscription</span></span></div>
+      <div class="purchase-plan"><span class="plan-info"><b class="plan-price">₹4500</b><span class="plan-label">1 Year Subscription</span></span></div>
+    </div>
+    <div style="margin:16px 0 8px;padding:14px 12px;border:1px solid #dbeafe;border-radius:14px;background:#f8fbff;text-align:center;font-size:14px;font-weight:800;color:#0f172a;line-height:1.6">
+      सब्सक्रिप्शन लेने के लिए इस नंबर पर संपर्क करें<br>
+      <b style="font-size:18px;color:#059669">8901011400</b>
+    </div>
+    <div id="planPaymentStatus" class="plan-payment-status"></div>
+    <div class="plan-pin-box">
+      <div class="plan-pin-title">Login with Mobile + PIN</div>
+      <input id="licenseMobile" type="tel" inputmode="numeric" maxlength="10" placeholder="ENTER MOBILE NUMBER" autocomplete="tel">
+      <input id="licenseKey" type="text" inputmode="numeric" maxlength="6" placeholder="ENTER 6-DIGIT PIN" autocomplete="off">
+      <button class="activate" onclick="activateLicense()">LOGIN & OPEN APPLICATION</button>
+    </div>
+    <div class="plan-help">Need Help? <b>8901011400</b><br><span>Helpline Support</span></div>
+  </div>
+</div>
+
+
+
+<div id="app" class="app">
+
+<div class="header">
+  <div class="title-line"><div class="title">MK TOTAL SOLUTION</div><button class="assistant-btn" onclick="showAssistant()">🤖 ASSISTANT</button></div>
+  <div class="subtitle">Offline Data Processing & Formatting</div>
+  <div class="licensebar">
+    <span>PLAN: <b id="planText">—</b></span>
+    <span>VALID: <b id="validText">—</b></span>
+    <span id="trialTimer" class="trial-timer">⏱ --:--</span>
+    <button onclick="showLicenseInfo()">LICENSE</button>
+    <button id="licenseLogoutBtn" onclick="logoutLicense()" style="display:none">LOGOUT</button>
+  </div>
+</div>
+
+<div class="card">
+<div class="row">
+<div class="field">
+<label>CLIENT</label>
+<select id="clientSelect"></select>
+</div>
+<div class="field game-select">
+<label>GAME</label>
+<select id="gameSelect" onchange="selectGame(this.value)">
+<option value="DB">DB</option>
+<option value="SG">SG</option>
+<option value="FB">FB</option>
+<option value="GB">GB</option>
+<option value="Gali">GALI</option>
+<option value="DS">DS</option>
+</select>
+</div>
+</div>
+<div class="client-actions">
+<button onclick="addClient()">+ CLIENT</button>
+<button class="btn-delete" onclick="deleteClient()">DELETE</button>
+<button onclick="showMaster()">MASTER</button><button onclick="showFinalPage()">FINAL</button>
+</div>
+</div>
+
+<div id="clientModal" class="modal" onclick="closeModalOutside(event,'clientModal')">
+  <div class="modal-box client-modal-box">
+    <div class="modal-head"><h3>ADD / EDIT CLIENT</h3><button class="close-btn" onclick="closeClientModal()">CLOSE</button></div>
+    <input id="clientModalName" class="client-modal-name" placeholder="Player Name" autocomplete="off">
+    <div class="client-rate-grid">
+      <div><label>Pair</label><input id="clientModalPair" inputmode="decimal" placeholder="Rate"></div>
+      <div><label>Comm</label><input id="clientModalComm" inputmode="decimal" placeholder="comm"></div>
+      <div><label>IN/Out</label><input id="clientModalInOut" inputmode="decimal" placeholder="Rate"></div>
+      <div><label>Patti</label><input id="clientModalPatti" inputmode="decimal" placeholder="Patti"></div>
+    </div>
+    <div class="client-modal-buttons"><button class="btn-save" onclick="saveClientModal()">SAVE CLIENT</button><button class="btn-delete" onclick="closeClientModal()">CANCEL</button></div>
+    <div class="client-modal-recent-title">RECENT CLIENTS</div>
+    <div id="clientModalRecent" class="client-modal-recent"></div>
+  </div>
+</div>
+
+<div class="card">
+<label>INPUT DATA</label>
+<textarea id="rawInput" maxlength="1000000" placeholder="WhatsApp data yahan paste karein..." oninput="processData()"></textarea>
+<div class="buttons">
+<button onclick="processData()">PROCESS</button>
+<button class="btn-delete" onclick="deleteCurrentData()">DELETE</button>
+</div>
+</div>
+
+<div class="card">
+<label>OUTPUT</label>
+<div id="output" class="output"></div>
+<div id="verifyStatus" class="verify-status">READY • Offline Verify Engine</div>
+<div class="buttons">
+<button class="btn-copy" onclick="copyOutput()">COPY OUTPUT</button>
+<button class="btn-save" onclick="saveCurrentData()">SAVE DATA</button>
+</div>
+</div>
+
+<div class="add-result-row">
+  <button class="add-result-btn" onclick="addResultOnly()">ADD RESULT</button>
+</div>
+<div id="resultModal" class="modal" onclick="closeModalOutside(event,'resultModal')">
+  <div class="modal-box result-modal-box">
+    <div class="modal-head"><h3>ADD RESULT</h3><button class="close-btn" onclick="closeResultModal()">CLOSE</button></div>
+    <div class="result-game-label" id="resultGameLabel">DB — Delhi Bazar</div>
+    <label>RESULT NUMBER</label>
+    <input id="resultNumberInput" inputmode="numeric" maxlength="2" placeholder="00 - 99" autocomplete="off">
+    <button class="btn-save result-save-btn" onclick="saveResultPopup()">SAVE RESULT</button>
+  </div>
+</div>
+
+<div id="gameSummary" class="game-summary" onclick="showGameHistory()">
+  <div class="game-summary-name" id="gameSummaryName">DB — Delhi Bazar</div>
+  <div class="game-summary-right">
+    <div class="game-summary-total" id="gameSummaryTotal">₹0</div>
+    <button class="game-summary-delete" onclick="event.stopPropagation();deleteGameTotal(APP.selectedGame)">DELETE</button>
+  </div>
+</div>
+
+<div class="small">App data local device storage mein save hota hai. License central Supabase database se controlled hai.</div>
+
+
+</div>
+
+<div id="assistantPage" class="assistant-page">
+  <div class="assistant-head"><div><div class="assistant-title">🤖 OFFLINE RULE ASSISTANT</div><div class="assistant-sub">CHAT • TEST • TEACH • CUSTOM CORRECTIONS</div></div><button class="assistant-back" onclick="closeAssistant()">BACK</button></div>
+  <div id="assistantChat" class="assistant-chat"></div>
+  <div class="assistant-compose"><textarea id="assistantInput" maxlength="1000000" placeholder="Yahan rule ya problem likho... Example: 111A ka rule kya hai? Ya current input ka TEST karo."></textarea><button onclick="assistantSend()">SEND</button></div>
+  <div class="assistant-tools"><button onclick="assistantTestCurrent()">TEST CURRENT INPUT</button><button onclick="assistantExplainRules()">SHOW ALL RULES</button></div>
+  <div class="teach-card"><h4>TEACH / CORRECT ASSISTANT</h4><div class="assistant-sub">Agar kisi exact input ka output galat ho, neeche input aur correct output save karo. Offline assistant wahi correction future me exact same input par use karega.</div><textarea id="teachInput" maxlength="1000000" placeholder="INPUT EXAMPLE"></textarea><textarea id="teachOutput" maxlength="1000000" placeholder="CORRECT OUTPUT"></textarea><div class="buttons"><button class="btn-save" onclick="saveTeachRule()">SAVE CORRECTION</button><button onclick="loadTeachFromCurrent()">USE CURRENT DATA</button></div><div id="teachList" class="teach-list"></div></div>
+</div>
+
+<div id="helpPage" class="help-page">
+  <div class="help-page-head">
+    <div><div class="help-page-title">HELP</div><div class="help-page-sub">MK TOTAL SOLUTION • FORMAT & APP GUIDE</div></div>
+    <button class="help-back-btn" onclick="closeHelp()">BACK</button>
+  </div>
+  <div class="help-section"><h4>1. JODI + AMOUNT</h4><div class="help-example">25=20 → 25(20)
+25 32 47 into 20 → 25 32 47(20)
+15*51*57*75(into 10) → 15 51 57 75(10)</div></div>
+  <div class="help-section"><h4>2. SYMBOL / INTO RULE</h4><div class="help-example">. , : ; / - + * × = @ # $ ₹ [ ] ( ) आदि separators/amount markers हो सकते हैं।
+INTO / INTUU / ITNO / INTU के बाद वाला amount उसी group पर लगेगा।
+Example: 92.94.66.00.60(10) → sab par 10</div></div>
+  <div class="help-section"><h4>3. CROSSING</h4><div class="help-example">Explicit CROSSING में N distinct digits से N×N ordered jodi बनती हैं।
+3 digits → 9 • 4 → 16 • 5 → 25 • 6 → 36 • 7 → 49 • 8 → 64</div></div>
+  <div class="help-section"><h4>4. HARUF</h4><div class="help-example">555=100 → Bahar: 05 15 25 35 45 55 65 75 85 95(10)
+555 A=100 → Andar: 50 51 52 53 54 55 56 57 58 59(10)
+AB → Andar + Bahar, duplicate हटाकर 19 jodi.</div></div>
+  <div class="help-section"><h4>5. PLT / PALT / PALTI / PALAT</h4><div class="help-example">25 37 PLT=20 → 25 37(20) + 52 73(20)
+Reverse सिर्फ उसी line/group पर लागू होता है।</div></div>
+  <div class="help-section"><h4>6. WP</h4><div class="help-example">25 37 WP=20 → 25 37(20) + 52 73(20)</div></div>
+  <div class="help-section"><h4>7. COMPACT GALI INPUT</h4><div class="help-example">Gali में 80100 → 80(100)
+4925 → 49(25)
+9630 → 96(30)
+ऐसे compact jodi+amount tokens को app अलग करके process करता है।</div></div>
+  <div class="help-section"><h4>8. NO-MISS / VERIFY</h4><div class="help-example">हर line अलग process होती है। Duplicate jodi, leading zero और अलग-अलग amount groups preserve रहते हैं। App deterministic parser + verification checks इस्तेमाल करता है; कोई random AI decision नहीं लिया जाता।</div></div>
+  <div class="help-section"><h4>9. SAVE HISTORY</h4><div class="help-example">SAVE DATA करने पर हर save अलग history entry बनता है। सबसे नया save सबसे ऊपर रहता है। हर entry का अपना DELETE option है।</div></div>
+</div>
+
+<!-- UNIVERSAL OK / CANCEL DIALOG -->
+<div id="actionDialog" class="modal" aria-hidden="true">
+  <div class="modal-box action-dialog-box">
+    <div class="modal-head"><h3 id="actionDialogTitle">CONFIRM</h3><button class="close-btn" onclick="mkDialogCancel()">CLOSE</button></div>
+    <div id="actionDialogMessage" class="action-dialog-message"></div>
+    <input id="actionDialogInput" class="action-dialog-input" type="text" autocomplete="off" style="display:none">
+    <div class="action-dialog-buttons">
+      <button class="btn-delete" onclick="mkDialogCancel()">CANCEL</button>
+      <button class="btn-save" onclick="mkDialogOk()">OK</button>
+    </div>
+  </div>
+</div>
+
+<div id="gameHistoryPage" class="game-history-page">
+  <div class="game-history-head">
+    <div>
+      <div class="game-history-title">HISTORY</div>
+      <div class="game-history-sub" id="gameHistorySub">DB — Delhi Bazar • TODAY</div>
+    </div>
+    <button class="final-back-btn" onclick="closeGameHistory()">BACK</button>
+  </div>
+  <div id="gameHistoryList" class="game-history-list"></div>
+</div>
+
+<div id="finalPage" class="final-page">
+  <div class="final-page-head">
+    <div><div class="final-page-title">FINAL</div><div class="final-page-sub" id="finalPageSub">TODAY</div></div>
+    <button class="final-back-btn" onclick="closeFinalPage()">BACK</button>
+  </div>
+  <div class="final-client-card"><span>CLIENT</span><strong id="finalClientName">—</strong></div>
+  <div class="final-games" id="finalGames"></div>
+  <div class="final-grand-card">
+    <div class="final-grand-row"><span>Total Game</span><strong id="finalTotalGame">₹0</strong></div>
+    <div class="final-grand-row"><span id="finalCommissionLabel">Commission (0%)</span><strong id="finalCommission">₹0</strong></div>
+    <div class="final-grand-row"><span>Passing Total</span><strong id="finalPassing">₹0</strong></div>
+    <div class="final-grand-row" id="finalPattiRow" style="display:none"><span id="finalPattiLabel">Patti (0%)</span><strong id="finalPatti" class="final-patti">₹0</strong></div>
+    <div class="final-grand-row" id="finalAdjustedRow" style="display:none"><span>FINAL AMOUNT</span><strong id="finalAdjusted" class="final-adjusted">₹0--</strong></div>
+    <div class="final-output" id="finalOutput">Total Game = 0
+Commission (0%) = 0
+Passing Total = 0</div>
+  </div>
+</div>
+
+<div id="masterPage" class="master-page">
+  <div class="master-page-head">
+    <div>
+      <div class="master-page-title">MASTER</div>
+      <div class="master-page-sub" id="masterPageSub">SELECTED GAME • TODAY</div>
+    </div>
+    <button class="master-back-btn" onclick="closeMaster()">BACK</button>
+  </div>
+
+  <div class="master-table-card">
+    <div class="master-table-top"><span id="masterTableGame">DB — Delhi Bazar</span><span id="masterTableDate"></span></div>
+    <div class="master-number-grid" id="masterNumberGrid"></div>
+    <div class="master-total-row"><span>TOTAL</span><strong id="masterGrandTotal">₹0</strong></div>
+  </div>
+
+  <div class="master-action-grid">
+    <button class="master-action cutting" onclick="masterCutting()">CUTTING</button>
+    <button class="master-action less" onclick="masterLess()">LESS</button>
+    <button class="master-action copy" onclick="masterCopy()">COPY</button>
+    <button class="master-action save-top" onclick="masterSave()">SAVE</button>
+  </div>
+  <div class="master-adjust-info" id="masterAdjustInfo">No cutting / less applied.</div>
+</div>
+
+<script>
+/* =========================================================
+   CONNECTED SUPABASE LICENSE SYSTEM
+========================================================= */
+
+const SUPABASE_URL="https://cftwltsboquaeydqndjg.supabase.co";
+const SUPABASE_KEY="sb_publishable_NQII03Veqap7EkwDxLfAqQ_m3hdCovb";
+const LICENSE_STORAGE="MK_JODI_LICENSE_V3";
+const APP_STORAGE="MK_JODI_FORMATTER_APP_V3";
+const DEVICE_STORAGE="MK_JODI_DEVICE_ID_V1";
+const TRIAL_STORAGE="MK_TOTAL_SOLUTION_TRIAL_V1";
+const TRIAL_MS=48*60*60*1000;
+
+/* =========================================================
+   V19 SUBSCRIPTION CHECKOUT
+   Razorpay secret stays server-side.
+========================================================= */
+const PAYMENT_API_URL="https://cftwltsboquaeydqndjg.supabase.co/functions/v1/mk-payment";
+// Razorpay key is always returned by the secure Supabase payment server.
+// No Test key is stored in the application. Live checkout starts only when
+// RAZORPAY_KEY_ID on the server is an rzp_live_ key.
+const RAZORPAY_PUBLIC_KEY="";
+const SUBSCRIPTION_PLANS={
+  "1m":{amount:699,days:30,label:"1 Month Subscription"},
+  "3m":{amount:1800,days:90,label:"3 Month Subscription"},
+  "6m":{amount:2800,days:180,label:"6 Month Subscription"},
+  "1y":{amount:4500,days:365,label:"1 Year Subscription"},
+  "trial":{amount:0,days:2,label:"48 Hour Free Trial"}
+};
+function planStatus(msg,ok=false){const el=document.getElementById("planPaymentStatus");if(!el)return;el.textContent=msg;el.className="plan-payment-status show "+(ok?"ok":"bad");}
+async function paymentRequest(payload){
+  const r=await fetch(PAYMENT_API_URL,{method:"POST",headers:{"Content-Type":"application/json","apikey":SUPABASE_KEY},body:JSON.stringify(payload)});
+  let data={};try{data=await r.json()}catch(e){}
+  if(!r.ok||!data.success){
+    const msg=String(data.message||"Payment server error");
+    if(/missing authorization header|jwt|unauthorized/i.test(msg)) throw new Error("Supabase Function me Verify JWT OFF karo, phir payment try karo.");
+    throw new Error(msg);
+  }
+  return data;
+}
+function loadRazorpay(){
+  return new Promise((resolve,reject)=>{
+    if(typeof window.Razorpay==="function") return resolve();
+    const old=document.getElementById("razorpay-checkout-js");
+    if(old){ old.addEventListener("load",()=>resolve(),{once:true}); old.addEventListener("error",()=>reject(new Error("Razorpay checkout load nahi hua.")),{once:true}); return; }
+    const sc=document.createElement("script"); sc.id="razorpay-checkout-js"; sc.src="https://checkout.razorpay.com/v1/checkout.js"; sc.async=true;
+    sc.onload=()=>resolve(); sc.onerror=()=>reject(new Error("Razorpay checkout load nahi hua.")); document.head.appendChild(sc);
+  });
+}
+async function startPlanPurchase(planKey){ if(planKey!=="trial"){ return; }
+  const plan=SUBSCRIPTION_PLANS[planKey];if(!plan)return;
+  if(planKey==="trial"){
+    const customer=getClientDetails();
+    if(!customer?.name||!/^[0-9]{10}$/.test(String(customer.mobile||""))){
+      showClientEntry();
+      return;
+    }
+    const trialResult=await startFreeTrial();
+    if(!trialResult) { showTrialEnded(); return; }
+    document.getElementById("lockScreen").style.display="none";
+    document.getElementById("clientEntry").style.display="none";
+    document.getElementById("app").classList.add("ready");
+    document.getElementById("planText").textContent="FREE TRIAL";
+    document.getElementById("validText").textContent="48 HOUR TRIAL";
+    updateTrialTimer(); init(); showAppPage();
+    return;
+  }
+  const customer=getClientDetails();
+  if(!customer?.name||!/^[0-9]{10}$/.test(customer.mobile)){showClientEntry();return;}
+  if(!PAYMENT_API_URL){planStatus("Payment server configured nahi hai.");return;}
+  planStatus("Secure payment order create ho raha hai...",true);
+  try{
+    await loadRazorpay();
+    const action="create_order";
+    const data=await paymentRequest({action,plan:planKey,amount:plan.amount,device_id:getDeviceId(),customer});
+    if(!data.order_id) throw new Error("Payment order create nahi hua.");
+    /* Existing Razorpay order is authoritative. Do not block checkout if the
+       server returns the display amount in rupees instead of paise. Razorpay
+       uses the created order_id, so the server-created order amount remains
+       exactly the amount selected for the plan. */
+    const key=String(data.key_id||RAZORPAY_PUBLIC_KEY||"").trim();
+    if(!/^rzp_live_/i.test(key)) throw new Error("Live Razorpay key configured nahi hai. Supabase Secrets me rzp_live_ Key ID aur Live Key Secret set karein.");
+    if(typeof window.Razorpay!=="function") throw new Error("Razorpay checkout load nahi hua.");
+    // Default Razorpay Checkout is intentionally used. The previous saved
+    // UPI-only config caused: "No appropriate payment method found".
+    const rz=new window.Razorpay({key,currency:data.currency||"INR",name:"MK TOTAL SOLUTION",description:plan.label,order_id:data.order_id,prefill:{name:customer.name,contact:customer.mobile,email:customer.email||""},theme:{color:"#059669"},method:{upi:true,card:false,netbanking:false,wallet:false},handler:async function(response){
+      planStatus("Payment verify ho raha hai...",true);
+      try{
+        const verifyAction="verify_payment";
+        const payload={action:verifyAction,plan:planKey,device_id:getDeviceId(),customer,razorpay_payment_id:response.razorpay_payment_id,razorpay_order_id:response.razorpay_order_id,razorpay_signature:response.razorpay_signature};
+        const vd=await paymentRequest(payload);
+        if(vd.license_key){saveLicense({licenseKey:vd.license_key,customerName:vd.customer_name||customer.name,customerMobile:vd.customer_mobile||customer.mobile,plan:vd.plan||planKey,status:vd.status||"active",expiry:vd.expires_at,lastOnlineCheck:Date.now(),lastSeen:Date.now(),accessPin:vd.access_pin||""});}
+        const successMobile=String(vd.customer_mobile||customer.mobile||"").replace(/\D/g,"");
+        const successMobileEl=document.getElementById("successMobile"); if(successMobileEl)successMobileEl.textContent=successMobile||"----------";
+        document.getElementById("successPin").textContent=vd.access_pin||"------";
+        document.getElementById("successPinInput").value="";
+        document.getElementById("successPinStatus").textContent="Payment successful. Enter the PIN shown above to open the application.";
+        document.getElementById("successPinStatus").className="client-entry-status show ok";
+        document.getElementById("purchaseSuccess").style.display="flex";
+        document.getElementById("lockScreen").style.display="none";
+        planStatus("Payment successful. Activation PIN generated.",true);
+        setTimeout(()=>document.getElementById("successPinInput")?.focus(),80);
+      }catch(e){planStatus(e.message||"Payment verification failed.");}
+    },modal:{ondismiss:function(){planStatus("Payment cancelled.");}}});
+    rz.on("payment.failed",function(resp){planStatus("Payment failed: "+(resp?.error?.description||"Please try again."));});
+    rz.open();
+  }catch(e){planStatus(e.message||"Payment start nahi ho paya.");}
+}
+
+function continueAfterPurchase(){submitPurchasePin();}
+function submitPurchasePin(){
+  const lic=readLicense();
+  const entered=String(document.getElementById("successPinInput")?.value||"").trim();
+  const actual=String(lic?.accessPin||"").trim();
+  const st=document.getElementById("successPinStatus");
+  if(!lic||!actual){if(st){st.textContent="Activation PIN not found. Please try the payment again.";st.className="client-entry-status show bad";}return;}
+  if(!/^\d{6}$/.test(entered)||entered!==actual){if(st){st.textContent="Wrong Activation PIN. Please enter the 6-digit PIN shown above.";st.className="client-entry-status show bad";}return;}
+  document.getElementById("purchaseSuccess").style.display="none";
+  startLicensedApp();
+}
+function getClientDetails(){try{return JSON.parse(localStorage.getItem("MK_CLIENT_DETAILS_V1")||"null")}catch(e){return null}}
+function saveClientDetails(x){localStorage.setItem("MK_CLIENT_DETAILS_V1",JSON.stringify(x))}
+function setEntryStatus(msg,ok=false){const el=document.getElementById("entryStatus");if(!el)return;el.textContent=msg;el.className="client-entry-status show "+(ok?"ok":"bad");}
+function showClientEntry(){
+  const form=document.getElementById("clientEntry");
+  const lock=document.getElementById("lockScreen");
+  const app=document.getElementById("app");
+  if(lock) lock.style.display="none";
+  if(app) app.classList.remove("ready");
+  if(form){
+    form.style.display="flex";
+    form.style.position="fixed";
+    form.style.inset="0";
+    form.style.zIndex="99999";
+  }
+  setTimeout(()=>document.getElementById("entryName")?.focus(),100);
+}
+async function submitClientDetails(){
+  const name=document.getElementById("entryName").value.trim(),mobile=document.getElementById("entryMobile").value.replace(/\D/g,"");
+  if(!name)return setEntryStatus("Name enter karein.");
+  if(!/^\d{10}$/.test(mobile))return setEntryStatus("10-digit mobile number enter karein.");
+  const btn=document.getElementById("entrySubmitBtn");btn.disabled=true;setEntryStatus("Details save ho rahi hain...",true);
+  try{
+    const customer={name,mobile,whatsapp:"",email:""};
+    const reg=await paymentRequest({action:"save_details",name:customer.name,mobile:customer.mobile,device_id:getDeviceId()});
+    if(!reg.success)throw new Error(reg.message||"Registration failed");
+    saveClientDetails({...customer,savedAt:Date.now()});
+    document.getElementById("clientEntry").style.display="none";document.getElementById("lockScreen").style.display="flex";
+    document.getElementById("planGreeting").textContent="Hi, "+name;
+    planStatus("Details registered successfully.",true);
+  }catch(e){setEntryStatus(e.message||"Details save nahi hui.");}
+  finally{btn.disabled=false;}
+}
+
+
+function getDeviceId(){
+  let id=localStorage.getItem(DEVICE_STORAGE);
+  if(!id){
+    id=(crypto.randomUUID?crypto.randomUUID():"MK-"+Date.now()+"-"+Math.random().toString(36).slice(2));
+    localStorage.setItem(DEVICE_STORAGE,id);
+  }
+  return id;
+}
+
+function readLicense(){
+  try{return JSON.parse(localStorage.getItem(LICENSE_STORAGE)||"null")}catch(e){return null}
+}
+function saveLicense(x){localStorage.setItem(LICENSE_STORAGE,JSON.stringify(x))}
+
+async function rpc(name,args={}){
+  const r=await fetch(SUPABASE_URL+"/rest/v1/rpc/"+name,{
+    method:"POST",
+    headers:{"Content-Type":"application/json","apikey":SUPABASE_KEY,"Authorization":"Bearer "+SUPABASE_KEY},
+    body:JSON.stringify(args)
+  });
+  let data=null; try{data=await r.json()}catch(e){}
+  if(!r.ok)throw new Error(data?.message||data?.hint||"Server error");
+  return data;
+}
+
+function showLicenseStatus(html,ok){
+  document.getElementById("licenseStatus").innerHTML='<span class="'+(ok?"ok":"bad")+'">'+html+'</span>';
+}
+
+document.getElementById("licenseMobile").addEventListener("input",function(){
+  this.value=this.value.replace(/\D/g,"").slice(0,10);
+});
+document.getElementById("licenseKey").addEventListener("input",function(){
+  this.value=this.value.replace(/\D/g,"").slice(0,6);
+});
+document.getElementById("licenseKey").addEventListener("keydown",function(e){
+  if(e.key==="Enter")activateLicense();
+});
+document.getElementById("licenseMobile").addEventListener("keydown",function(e){
+  if(e.key==="Enter")document.getElementById("licenseKey").focus();
+});
+
+async function activateLicense(){
+  const mobile=document.getElementById("licenseMobile").value.replace(/\D/g,"").trim();
+  const pin=document.getElementById("licenseKey").value.trim();
+  if(!/^\d{10}$/.test(mobile)){showLicenseStatus("10-digit mobile number enter karein.",false);return}
+  if(!/^\d{6}$/.test(pin)){showLicenseStatus("6-digit PIN enter karein.",false);return}
+  showLicenseStatus("Mobile + PIN online verify ho raha hai...",true);
+  try{
+    let data;
+    try{
+      // New secure login: server must verify Mobile + PIN + Device together.
+      data=await rpc("activate_license",{p_license_key:pin,p_customer_mobile:mobile,p_device_id:getDeviceId()});
+    }catch(err){
+      // Backward compatibility with the existing RPC signature.
+      data=await rpc("activate_license",{p_license_key:pin,p_device_id:getDeviceId()});
+    }
+    if(!data?.success){showLicenseStatus(data?.message||"License invalid.",false);return}
+    const registeredMobile=String(data.customer_mobile||data.mobile||data.customer?.mobile||"").replace(/\D/g,"");
+    // Never allow a PIN-only response to bypass Mobile verification.
+    if(!registeredMobile || registeredMobile!==mobile){
+      showLicenseStatus("Mobile number aur PIN match nahi karte.",false);
+      return;
+    }
+    saveLicense({licenseKey:data.license_key,customerName:data.customer_name||"",customerMobile:registeredMobile||mobile,plan:data.plan,status:data.status,expiry:data.expires_at,lastOnlineCheck:Date.now(),lastSeen:Date.now()});
+    showLicenseStatus("Login successful.<br>Valid Till: <b>"+new Date(data.expires_at).toLocaleDateString()+"</b>",true);
+    setTimeout(startLicensedApp,400);
+  }catch(e){
+    showLicenseStatus("Internet connection/server check failed. Login ke liye internet chahiye.",false);
+  }
+}
+
+function logoutLicense(){
+  localStorage.removeItem(LICENSE_STORAGE);
+  document.getElementById("app")?.classList.remove("ready");
+  document.getElementById("homePage")?.classList.remove("show");
+  document.getElementById("lockScreen").style.display="flex";
+  document.getElementById("licenseMobile").value="";
+  document.getElementById("licenseKey").value="";
+  showLicenseStatus("Logged out. Mobile number + PIN se dobara login karein.",true);
+}
+
+async function validateLicense(show=true){
+  const lic=readLicense();
+  if(!lic||!lic.licenseKey||!lic.expiry)return false;
+  const now=Date.now();
+  if(lic.lastSeen && now+300000<Number(lic.lastSeen)){
+    if(show)showLicenseStatus("Device date rollback detect hua.",false);
+    return false;
+  }
+  lic.lastSeen=Math.max(now,Number(lic.lastSeen||0));
+  if(now>=new Date(lic.expiry).getTime()){
+    if(show)showLicenseStatus("License expire ho gaya hai.",false);
+    return false;
+  }
+
+  // Online re-check when possible. Offline cache is allowed until local expiry.
+  try{
+    const data=await rpc("check_license",{p_license_key:lic.licenseKey,p_device_id:getDeviceId()});
+    if(!data?.success){
+      localStorage.removeItem(LICENSE_STORAGE);
+      if(show)showLicenseStatus(data?.message||"License invalid.",false);
+      return false;
+    }
+    lic.customerName=data.customer_name||lic.customerName||"";
+    lic.plan=data.plan||lic.plan;
+    lic.status=data.status||"active";
+    lic.expiry=data.expires_at||lic.expiry;
+    lic.lastOnlineCheck=now;
+  }catch(e){
+    // Offline mode: use the previously verified local expiry.
+  }
+  saveLicense(lic);
+  return now<new Date(lic.expiry).getTime();
+}
+
+function showToast(msg){
+  let t=document.getElementById("mkToast");
+  if(!t){t=document.createElement("div");t.id="mkToast";t.style.cssText="position:fixed;left:50%;bottom:24px;transform:translateX(-50%);z-index:20000;background:#059669;color:#fff;padding:10px 16px;border-radius:10px;font-weight:900;font-size:13px;box-shadow:0 8px 25px #0007;opacity:0;transition:opacity .2s;pointer-events:none";document.body.appendChild(t)}
+  t.textContent=msg;t.style.opacity="1";clearTimeout(t._tm);t._tm=setTimeout(()=>t.style.opacity="0",1600);
+}
+
+let MK_DIALOG_OK=null;
+let MK_DIALOG_OPEN=false;
+function mkDialogOpen(title,message,opts={}){
+  const modal=document.getElementById("actionDialog");if(!modal)return;
+  const titleEl=document.getElementById("actionDialogTitle"),msg=document.getElementById("actionDialogMessage"),inp=document.getElementById("actionDialogInput");
+  if(titleEl)titleEl.textContent=title||"CONFIRM";
+  if(msg)msg.textContent=message||"";
+  if(inp){inp.style.display=opts.input?"block":"none";inp.value=opts.value??"";inp.placeholder=opts.placeholder||"";inp.inputMode=opts.inputMode||"text";}
+  MK_DIALOG_OK=typeof opts.ok==="function"?opts.ok:null;MK_DIALOG_OPEN=true;modal.classList.add("show");modal.setAttribute("aria-hidden","false");
+  setTimeout(()=>{if(opts.input)inp?.focus();},80);
+}
+function mkDialogOk(){
+  const fn=MK_DIALOG_OK;const inp=document.getElementById("actionDialogInput");const value=inp?.value??"";
+  MK_DIALOG_OK=null;MK_DIALOG_OPEN=false;document.getElementById("actionDialog")?.classList.remove("show");document.getElementById("actionDialog")?.setAttribute("aria-hidden","true");
+  if(fn)fn(value);
+}
+function mkDialogCancel(){MK_DIALOG_OK=null;MK_DIALOG_OPEN=false;document.getElementById("actionDialog")?.classList.remove("show");document.getElementById("actionDialog")?.setAttribute("aria-hidden","true");}
+function mkConfirm(message,ok,title="CONFIRM"){mkDialogOpen(title,message,{ok});}
+function mkPrompt(message,value,ok,title="ENTER VALUE",placeholder="Enter value",inputMode="decimal"){mkDialogOpen(title,message,{input:true,value,placeholder,inputMode,ok});}
+
+const MK_ASSISTANT_RULES_KEY="MK_OFFLINE_ASSISTANT_RULES_V1";
+function mkAssistantRules(){try{const a=JSON.parse(localStorage.getItem(MK_ASSISTANT_RULES_KEY)||"[]");return Array.isArray(a)?a:[]}catch(e){return[]}}
+function mkAssistantSaveRules(a){localStorage.setItem(MK_ASSISTANT_RULES_KEY,JSON.stringify(a||[]))}
+function mkAssistantNormalize(s){return String(s||"").replace(/\r\n/g,"\n").trim().replace(/[ \t]+/g," ")}
+function assistantAdd(role,text){const box=document.getElementById("assistantChat");if(!box)return;const d=document.createElement("div");d.className="chat-msg "+role;d.textContent=text;box.appendChild(d);box.scrollTop=box.scrollHeight}
+function assistantWelcome(){const box=document.getElementById("assistantChat");if(!box||box.dataset.ready)return;box.dataset.ready="1";assistantAdd("bot","Namaste MK Bhai. Main OFFLINE RULE ASSISTANT hoon. Main app ke existing rules explain/test karta hoon. Agar exact input ka output galat ho, TEACH / CORRECT me correct output save karke mujhe wahi rule sikha sakte ho. Main koi rule apni marzi se change nahi karta.")}
+function showAssistant(){document.getElementById("app")?.classList.remove("ready");document.getElementById("helpPage")?.classList.remove("show");document.getElementById("masterPage")?.classList.remove("show");document.getElementById("finalPage")?.classList.remove("show");document.getElementById("assistantPage")?.classList.add("show");assistantWelcome();renderTeachRules();window.scrollTo(0,0);if(!(history.state&&history.state.page==="assistant"))history.pushState({page:"assistant"},"","#assistant")}
+function closeAssistant(){document.getElementById("assistantPage")?.classList.remove("show");document.getElementById("app")?.classList.add("ready");if(history.state&&history.state.page==="assistant")history.back()}
+function assistantRulesText(){return "ACTIVE RULES:\n1. 2 digit = normal Jodi. Leading zero preserved.\n2. 3-8 digits together = automatic Crossing (N×N), unique digits only.\n3. JT / Joda Cut = same-digit jodi cut.\n4. 111A = Andar: 10 to 19. 111B = Bahar: 01,21...91. AB = dono.\n5. Haruf conversion amount me sirf ek trailing zero kam hota hai.\n6. PLT/PALAT/PALTI/WP = original + reverse jodi.\n7. Amount se pehle symbols unlimited ho sakte hain: ((50), (((50)), **50, *50into.....20 etc.\n8. Same amount group me amount sirf line ke end me (amount).\n9. Har input line separate output line; beech me blank line nahi.\n10. Duplicate aur valid number miss/delete nahi hote."}
+function assistantHelpText(){return `HELP — MK TOTAL SOLUTION • FORMAT & APP GUIDE
+
+1. JODI + AMOUNT
+25=20 → 25(20)
+25 32 47 into 20 → 25 32 47(20)
+15*51*57*75(into 10) → 15 51 57 75(10)
+
+2. SYMBOL / INTO RULE
+. , : ; / - + * × = @ # $ ₹ [ ] ( ) आदि separators/amount markers हो सकते हैं।
+INTO / INTUU / ITNO / INTU के बाद वाला amount उसी group पर लगेगा।
+Example: 92.94.66.00.60(10) → sab par 10
+
+3. CROSSING
+Explicit CROSSING में N distinct digits से N×N ordered jodi बनती हैं।
+3 digits → 9 • 4 → 16 • 5 → 25 • 6 → 36 • 7 → 49 • 8 → 64
+
+4. HARUF
+555=100 → Bahar: 05 15 25 35 45 55 65 75 85 95(10)
+555 A=100 → Andar: 50 51 52 53 54 55 56 57 58 59(10)
+AB → Andar + Bahar, duplicate हटाकर 19 jodi.
+
+5. PLT / PALT / PALTI / PALAT
+25 37 PLT=20 → 25 37(20) + 52 73(20)
+Reverse सिर्फ उसी line/group पर लागू होता है।
+
+6. WP
+25 37 WP=20 → 25 37(20) + 52 73(20)
+
+7. COMPACT GALI INPUT
+Gali में 80100 → 80(100)
+4925 → 49(25)
+9630 → 96(30)
+ऐसे compact jodi+amount tokens को app अलग करके process करता है।
+
+8. NO-MISS / VERIFY
+हर line अलग process होती है। Duplicate jodi, leading zero और अलग-अलग amount groups preserve रहते हैं। App deterministic parser + verification checks इस्तेमाल करता है; कोई random AI decision नहीं लिया जाता।
+
+9. SAVE HISTORY
+SAVE DATA करने पर हर save अलग history entry बनता है। सबसे नया save सबसे ऊपर रहता है। हर entry का अपना DELETE option है।`}
+function assistantExplainRules(){assistantWelcome();assistantAdd("bot",assistantRulesText())}
+function assistantSend(){const inp=document.getElementById("assistantInput"),q=(inp?.value||"").trim();if(!q)return;assistantAdd("user",q);if(inp)inp.value="";const l=q.toLowerCase();if(/\bhelp\b|मदद|सहायता|guide/.test(l)){assistantAdd("bot",assistantHelpText());return}if(/all rule|show rule|rule/.test(l)&&!/test/.test(l)){assistantAdd("bot",assistantRulesText());return}if(/111a|andar/.test(l)){assistantAdd("bot","111A = Andar Haruf: 10 11 12 13 14 15 16 17 18 19. Example: 111A into 200 → 10 11 12 13 14 15 16 17 18 19(20)");return}if(/111b|bahar/.test(l)){assistantAdd("bot","111B = Bahar Haruf: 01 11 21 31 41 51 61 71 81 91. AB me Andar + Bahar dono unique jodi aayengi.");return}if(/plt|palat|palti|wp/.test(l)){assistantAdd("bot","PLT/PALAT/PALTI/WP: original jodi ke saath reverse jodi add hoti hai. Example 12 30 WP(20) → 12 21 30 03(20)");return}if(/test|check|output/.test(l)){const r=parseInputStrict(q.replace(/^.*?(?:test|check)[: ]*/i,""));assistantAdd("bot",r.output||"Koi valid output nahi mila.");return}assistantAdd("bot","Maine aapka message dekha. Rule explain karne ke liye rule ka naam likho, ya TEST CURRENT INPUT dabao. Agar output galat ho to neeche exact input + correct output save karke mujhe teach karo.")}
+function assistantTestCurrent(){const input=document.getElementById("rawInput")?.value||"";assistantWelcome();if(!input.trim()){assistantAdd("bot","Current input khali hai.");return}const r=parseInputStrict(input);assistantAdd("user","TEST CURRENT INPUT\n"+input);assistantAdd("bot","OUTPUT\n"+(r.output||"No output"))}
+function loadTeachFromCurrent(){const i=document.getElementById("rawInput")?.value||"",o=document.getElementById("output")?.textContent||"";document.getElementById("teachInput").value=i;document.getElementById("teachOutput").value=o}
+function saveTeachRule(){const input=mkAssistantNormalize(document.getElementById("teachInput")?.value),output=String(document.getElementById("teachOutput")?.value||"").trim();if(!input||!output){assistantAdd("bot","Input aur Correct Output dono required hain.");return}const rules=mkAssistantRules();const idx=rules.findIndex(r=>r.input===input);const item={input,output,updated:Date.now()};if(idx>=0)rules[idx]=item;else rules.unshift(item);mkAssistantSaveRules(rules.slice(0,1000));renderTeachRules();assistantAdd("bot","Correction save ho gaya. Exact same input future me saved correct output se process hoga.")}
+function renderTeachRules(){const box=document.getElementById("teachList");if(!box)return;const rules=mkAssistantRules();box.innerHTML="";if(!rules.length){box.textContent="No custom corrections saved.";return}rules.forEach((r,i)=>{const d=document.createElement("div");d.className="teach-item";const b=document.createElement("button");b.textContent="DELETE";b.onclick=()=>{const a=mkAssistantRules();a.splice(i,1);mkAssistantSaveRules(a);renderTeachRules()};d.appendChild(b);d.appendChild(document.createTextNode("INPUT:\n"+r.input+"\n\nCORRECT OUTPUT:\n"+r.output));box.appendChild(d)})}
+function mkAssistantOverride(line){const key=mkAssistantNormalize(line);if(!key)return null;const r=mkAssistantRules().find(x=>x.input===key);if(!r)return null;const ns=(String(r.output).match(/\b\d{2}\b/g)||[]);const am=(String(r.output).match(/\((\d+(?:\.\d+)?)\)\s*$/)||[])[1];return {text:String(r.output).trim(),count:ns.length,amount:am===undefined?null:Number(am),lineTotal:am===undefined?0:ns.length*Number(am)}
+}
+
+function showHelp(){
+  document.getElementById("app")?.classList.remove("ready");
+  document.getElementById("masterPage")?.classList.remove("show");
+  document.getElementById("finalPage")?.classList.remove("show");
+  const page=document.getElementById("helpPage");if(page)page.classList.add("show");
+  window.scrollTo(0,0);
+  if(!(history.state&&history.state.page==="help"))history.pushState({page:"help"},"","#help");
+}
+function closeHelp(){
+  document.getElementById("helpPage")?.classList.remove("show");
+  document.getElementById("app")?.classList.add("ready");
+  if(history.state&&history.state.page==="help")history.back();
+}
+
+function showLicenseInfo(){
+  const lic=readLicense();
+  if(!lic)return;
+  alert("MK TOTAL SOLUTION\n\nCustomer: "+(lic.customerName||"-")+"\nPlan: "+({monthly:"1 Month",quarterly:"3 Months",halfyearly:"6 Months",yearly:"1 Year","1m":"1 Month","3m":"3 Months","6m":"6 Months","1y":"1 Year"}[lic.plan]||lic.plan||"-")+"\nValid Till: "+new Date(lic.expiry).toLocaleString()+"\n\nOnline verification: enabled");
+}
+
+async function startLicensedApp(){
+  const ok=await validateLicense(false);
+  if(!ok){
+    document.getElementById("lockScreen").style.display="flex";
+    document.getElementById("app").classList.remove("ready");
+    document.getElementById("homePage")?.classList.remove("show");
+    document.getElementById("licenseLogoutBtn")?.style.setProperty("display","none");
+    return;
+  }
+  document.getElementById("lockScreen").style.display="none";
+  document.getElementById("app").classList.add("ready");
+  const lic=readLicense();
+  document.getElementById("planText").textContent=({monthly:"1 MONTH",quarterly:"3 MONTHS",halfyearly:"6 MONTHS",yearly:"1 YEAR","1m":"1 MONTH","3m":"3 MONTHS","6m":"6 MONTHS","1y":"1 YEAR"}[lic.plan]||String(lic.plan||"").toUpperCase());
+  document.getElementById("validText").textContent=new Date(lic.expiry).toLocaleDateString();
+  document.getElementById("trialTimer").style.display="none";
+  document.getElementById("licenseLogoutBtn").style.display="inline-block";
+  init();
+  showAppPage();
+}
+
+function getTrial(){
+  try{return JSON.parse(localStorage.getItem(TRIAL_STORAGE)||"null")}catch(e){return null}
+}
+function saveTrial(x){localStorage.setItem(TRIAL_STORAGE,JSON.stringify(x))}
+async function startFreeTrial(){
+  let trial=getTrial();
+  const now=Date.now();
+  if(!trial||!trial.startedAt||!trial.expiresAt){
+    const customer=getClientDetails();
+    if(!customer?.name||!/^[0-9]{10}$/.test(String(customer.mobile||""))) return false;
+    try{
+      const r=await paymentRequest({action:"start_trial",name:customer.name,mobile:customer.mobile,whatsapp:customer.whatsapp||"",device_id:getDeviceId()});
+      if(!r.success) return false;
+      trial={startedAt:new Date(r.started_at).getTime(),expiresAt:new Date(r.expires_at).getTime(),lastSeen:now,serverTrial:true};
+      saveTrial(trial);
+    }catch(e){
+      alert((e&&e.message)||"Trial already used on this device.");
+      return false;
+    }
+  }
+  if(Number(trial.lastSeen||0)>now+300000)return false;
+  trial.lastSeen=Math.max(now,Number(trial.lastSeen||0));
+  saveTrial(trial);
+  return now<Number(trial.expiresAt);
+}
+function updateTrialTimer(){
+  const el=document.getElementById("trialTimer"); if(!el)return;
+  const lic=readLicense();
+  if(lic){el.style.display="none";return;}
+  const t=getTrial();
+  if(!t||!t.expiresAt){el.style.display="none";return;}
+  const left=Math.max(0,Number(t.expiresAt)-Date.now());
+  const sec=Math.ceil(left/1000);
+  const hh=String(Math.floor(sec/3600)).padStart(2,"0");
+  const mm=String(Math.floor((sec%3600)/60)).padStart(2,"0");
+  const ss=String(sec%60).padStart(2,"0");
+  el.textContent="⏱ "+hh+":"+mm+":"+ss;el.style.display="inline-block";
+}
+function showTrialEnded(){
+  document.getElementById("app")?.classList.remove("ready");
+  document.getElementById("clientEntry").style.display="none";
+  document.getElementById("lockScreen").style.display="flex";
+  const st=document.getElementById("planPaymentStatus");
+  if(st){st.className="plan-payment-status";st.textContent="";}
+}
+function showPlanScreen(){document.getElementById("clientEntry").style.display="none";document.getElementById("lockScreen").style.display="flex";}
+function bootLicense(){
+  if(readLicense()){startLicensedApp();return;}
+  const trial=getTrial();
+  if(trial&&trial.startedAt&&trial.expiresAt){
+    const trialOk=Date.now()<Number(trial.expiresAt);
+    if(trialOk){
+      document.getElementById("lockScreen").style.display="none";
+      document.getElementById("clientEntry").style.display="none";
+      document.getElementById("app").classList.add("ready");
+      document.getElementById("planText").textContent="FREE TRIAL";
+      document.getElementById("validText").textContent="TRIAL";
+      updateTrialTimer();document.getElementById("licenseLogoutBtn").style.display="none";init();showAppPage();return;
+    }
+    document.getElementById("lockScreen").style.display="flex";showTrialEnded();return;
+  }
+  const client=getClientDetails();
+  if(client?.name && /^\d{10}$/.test(client.mobile)){
+    document.getElementById("clientEntry").style.display="none";document.getElementById("lockScreen").style.display="flex";
+    const g=document.getElementById("planGreeting");if(g)g.textContent="Hi, "+client.name;
+  }else{
+    document.getElementById("lockScreen").style.display="none";showClientEntry();
+  }
+}
+
+
+/* =========================================================
+   ORIGINAL APP
+========================================================= */
+
+let APP={
+  clients:[],
+  selectedClient:"",
+  selectedGame:"DB",
+  data:{},
+  resultHistory:[]
+};
+
+function loadApp(){
+  try{
+    const saved=localStorage.getItem(APP_STORAGE);
+    if(saved){
+      const parsed=JSON.parse(saved);
+      if(parsed&&typeof parsed==="object")APP=Object.assign(APP,parsed);
+    }
+  }catch(e){console.log(e)}
+}
+
+function saveApp(){
+  localStorage.setItem(APP_STORAGE,JSON.stringify(APP));
+}
+
+function todayKey(){
+  const d=new Date();
+  return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+}
+function displayDate(key){
+  if(!key)return "";
+  const p=String(key).split("-");
+  return p.length===3?p[2]+"-"+p[1]+"-"+p[0]:key;
+}
+function rollGameToToday(gameData){
+  const today=todayKey();
+  if(!gameData.activeDate){gameData.activeDate=today;return;}
+  if(gameData.activeDate===today)return;
+  if(!Array.isArray(gameData.dateHistory))gameData.dateHistory=[];
+  const hasOld=gameData.input||gameData.output||Number(gameData.savedTotal||0)>0||Array.isArray(gameData.history)&&gameData.history.length;
+  if(hasOld){
+    gameData.dateHistory.push({date:gameData.activeDate,savedTotal:Number(gameData.savedTotal||0),history:Array.isArray(gameData.history)?JSON.parse(JSON.stringify(gameData.history)):[],resultNumber:gameData.resultNumber||"",resultAmount:gameData.resultAmount??null});
+  }
+  gameData.activeDate=today;
+  gameData.input="";gameData.output="";gameData.total=0;gameData.savedTotal=0;gameData.entries=[];gameData.history=[];gameData.resultNumber="";gameData.resultAmount=null;
+}
+
+function showAppPage(){document.getElementById("homePage")?.classList.remove("show");document.getElementById("masterPage")?.classList.remove("show");document.getElementById("finalPage")?.classList.remove("show");document.getElementById("gameHistoryPage")?.classList.remove("show");document.getElementById("app")?.classList.add("ready");window.scrollTo(0,0);}
+
+function init(){
+  loadApp();
+
+  if(!Array.isArray(APP.clients)||APP.clients.length===0)APP.clients=["Default"];
+  if(!APP.clientMeta||typeof APP.clientMeta!=="object")APP.clientMeta={};
+  APP.clients.forEach(c=>getClientMeta(c));
+
+  if(!APP.selectedClient||!APP.clients.includes(APP.selectedClient))
+    APP.selectedClient=APP.clients[0];
+
+  APP.runtimeDate=todayKey();
+  ensureClientGame();
+  renderClients();
+  renderClientModalRecent();
+  renderGames();
+  loadCurrentData();
+  processData();
+  renderGameTotals();
+  renderSaveHistory();
+  renderHomeClients();
+}
+
+
+function rollAllGamesToToday(){
+  const today=todayKey();
+  if(APP.runtimeDate===today)return;
+  if(APP.data&&typeof APP.data==="object")Object.keys(APP.data).forEach(client=>{
+    const games=APP.data[client];
+    if(!games||typeof games!=="object")return;
+    Object.keys(games).forEach(game=>{if(games[game]&&typeof games[game]==="object")rollGameToToday(games[game]);});
+  });
+  APP.runtimeDate=today;
+  saveApp();
+  ensureClientGame();
+  loadCurrentData();
+  processData();
+  renderGameTotals();
+}
+
+function getClientMeta(client){
+  if(!APP.clientMeta||typeof APP.clientMeta!="object")APP.clientMeta={};
+  if(!APP.clientMeta[client])APP.clientMeta[client]={pair:0,comm:0,inout:0,patti:0};
+  return APP.clientMeta[client];
+}
+function renderHomeClients(){
+  const gameSel=document.getElementById("homeGameSelect");
+  if(gameSel)gameSel.value=APP.selectedGame||"DB";
+  const sel=document.getElementById("homeClientSelect");
+  if(!sel)return;
+  sel.innerHTML="";
+  if(!APP.clients.length){const o=document.createElement("option");o.textContent="-- Select Active Client --";o.value="";sel.appendChild(o);return;}
+  APP.clients.forEach(c=>{const o=document.createElement("option");o.value=c;o.textContent=c;o.selected=c===APP.selectedClient;sel.appendChild(o);});
+  loadHomeClientMeta(APP.selectedClient);
+  const body=document.getElementById("recentClientsBody");
+  if(body){body.innerHTML="";APP.clients.forEach((c,i)=>{const m=getClientMeta(c);const tr=document.createElement("tr");tr.innerHTML='<td>'+(i+1)+'</td><td>'+escapeHtml(c)+'</td><td>'+formatAmount(m.comm||0)+'</td><td>'+formatAmount(m.pair||0)+'</td><td>'+formatAmount(m.inout||0)+'</td><td>'+formatAmount(m.patti||0)+'</td><td><button class="client-action-btn" onclick="editClientMeta('+JSON.stringify(c)+')">✏️</button><button class="client-action-btn" onclick="deleteClientByName('+JSON.stringify(c)+')">🗑️</button></td>';body.appendChild(tr);});}
+}
+function escapeHtml(v){return String(v).replace(/[&<>'"]/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[ch]));}
+function loadHomeClientMeta(client){
+  const m=getClientMeta(client||APP.selectedClient);
+  ["ratePair","rateComm","rateInOut","ratePatti"].forEach(id=>{const e=document.getElementById(id);if(e)e.value="";});
+  if(document.getElementById("ratePair"))document.getElementById("ratePair").value=m.pair||0;
+  if(document.getElementById("rateComm"))document.getElementById("rateComm").value=m.comm||0;
+  if(document.getElementById("rateInOut"))document.getElementById("rateInOut").value=m.inout||0;
+  if(document.getElementById("ratePatti"))document.getElementById("ratePatti").value=m.patti||0;
+}
+function saveHomeClientMeta(){
+  if(!APP.selectedClient)return;
+  const m=getClientMeta(APP.selectedClient);
+  m.pair=amountValue(document.getElementById("ratePair")?.value)||0;
+  m.comm=amountValue(document.getElementById("rateComm")?.value)||0;
+  m.inout=amountValue(document.getElementById("rateInOut")?.value)||0;
+  m.patti=amountValue(document.getElementById("ratePatti")?.value)||0;
+  saveApp();renderHomeClients();
+}
+["ratePair","rateComm","rateInOut","ratePatti"].forEach(id=>{document.addEventListener("change",e=>{if(e.target&&e.target.id===id)saveHomeClientMeta();});});
+function addClientFromHome(){
+  const inp=document.getElementById("homeClientName"); const clean=(inp?.value||"").trim();
+  if(!clean){alert("Client name enter karein.");return;}
+  if(APP.clients.includes(clean)){alert("Client already exist karta hai.");return;}
+  APP.clients.push(clean); APP.selectedClient=clean; getClientMeta(clean);
+  saveApp(); if(inp)inp.value=""; renderClients(); renderHomeClients(); ensureClientGame(); loadCurrentData(); processData(); renderGameTotals();
+}
+function homeClientChanged(client){
+  if(!client)return; saveHomeClientMeta(); APP.selectedClient=client; ensureClientGame(); saveApp(); renderClients(); renderHomeClients(); loadCurrentData(); processData(); renderGameTotals();
+}
+function openClientModal(client=""){
+  const modal=document.getElementById("clientModal");
+  if(!modal)return;
+  const name=client||"";
+  const m=name?getClientMeta(name):{pair:0,comm:0,inout:0,patti:0};
+  document.getElementById("clientModalName").value=name;
+  document.getElementById("clientModalPair").value=m.pair||"";
+  document.getElementById("clientModalComm").value=m.comm||"";
+  document.getElementById("clientModalInOut").value=m.inout||"";
+  document.getElementById("clientModalPatti").value=m.patti||"";
+  modal.classList.add("show");
+  renderClientModalRecent();
+  setTimeout(()=>document.getElementById("clientModalName")?.focus(),80);
+}
+function addClient(){openClientModal("");}
+function saveClientModal(){
+  const name=(document.getElementById("clientModalName")?.value||"").trim();
+  if(!name){alert("Player name enter karein.");return;}
+  const editing=document.getElementById("clientModalName").dataset.original||"";
+  if(!editing&&APP.clients.includes(name)){alert("Client already exist karta hai.");return;}
+  if(editing&&editing!==name&&APP.clients.includes(name)){alert("Client already exist karta hai.");return;}
+  const pair=amountValue(document.getElementById("clientModalPair")?.value)||0;
+  const comm=amountValue(document.getElementById("clientModalComm")?.value)||0;
+  const inout=amountValue(document.getElementById("clientModalInOut")?.value)||0;
+  const patti=amountValue(document.getElementById("clientModalPatti")?.value)||0;
+  mkConfirm((editing?"Client changes save karein?":"New client save karein?")+"\n\nPlayer: "+name+"\nPair: "+formatAmount(pair)+"\nComm: "+formatAmount(comm)+"\nIN/Out: "+formatAmount(inout)+"\nPatti: "+formatAmount(patti),()=>{
+    if(editing&&editing!==name){
+      const idx=APP.clients.indexOf(editing);if(idx>=0)APP.clients[idx]=name;
+      APP.data[name]=APP.data[editing];delete APP.data[editing];
+      APP.clientMeta[name]=APP.clientMeta[editing];delete APP.clientMeta[editing];
+    }else if(!APP.clients.includes(name)){APP.clients.push(name);}
+    APP.selectedClient=name;
+    const m=getClientMeta(name);m.pair=pair;m.comm=comm;m.inout=inout;m.patti=patti;
+    ensureClientGame();saveApp();renderClients();loadCurrentData();processData();renderGameTotals();renderClientModalRecent();
+    document.getElementById("clientModalName").dataset.original="";closeClientModal();
+  },editing?"UPDATE CLIENT":"SAVE CLIENT");
+}
+function renderClientModalRecent(){
+  const box=document.getElementById("clientModalRecent");if(!box)return;
+  box.innerHTML="";
+  APP.clients.forEach((c,i)=>{
+    const m=getClientMeta(c),row=document.createElement("div");row.className="client-modal-recent-row";
+    const sl=document.createElement("span");sl.className="client-modal-sl";sl.textContent=i+1;
+    const player=document.createElement("span");player.className="client-modal-player";player.textContent=c;
+    const comm=document.createElement("span");comm.textContent="Comm "+formatAmount(m.comm||0);
+    const pair=document.createElement("span");pair.textContent="Pair "+formatAmount(m.pair||0);
+    const edit=document.createElement("button");edit.type="button";edit.textContent="✏️";edit.title="Edit client";edit.addEventListener("click",e=>{e.stopPropagation();editClientModal(c);});
+    const del=document.createElement("button");del.type="button";del.className="btn-delete";del.textContent="🗑️";del.title="Delete client";del.addEventListener("click",e=>{e.stopPropagation();deleteClientByName(c);});
+    row.append(sl,player,comm,pair,edit,del);box.appendChild(row);
+  });
+}
+function editClientModal(client){
+  const n=document.getElementById("clientModalName");
+  if(n)n.dataset.original=client;
+  openClientModal(client);
+  if(n)n.dataset.original=client;
+}
+function closeClientModal(){
+  document.getElementById("clientModal")?.classList.remove("show");
+  const n=document.getElementById("clientModalName");if(n)n.dataset.original="";
+}
+function editClientMeta(client){editClientModal(client);}
+function deleteClientByName(client){
+  if(APP.clients.length<=1){alert("Kam se kam ek client rehna chahiye.");return;}
+  mkConfirm("Client delete karein?\n\n"+client,()=>{
+    delete APP.data[client];if(APP.clientMeta)delete APP.clientMeta[client];APP.clients=APP.clients.filter(x=>x!==client);
+    APP.selectedClient=APP.clients[0];ensureClientGame();saveApp();renderClients();loadCurrentData();processData();renderGameTotals();renderClientModalRecent();
+  },"DELETE CLIENT");
+}
+function deleteClient(){
+  if(APP.clients.length<=1){
+    alert("Kam se kam ek client rehna chahiye.");
+    return;
+  }
+
+  const client=APP.selectedClient;
+
+  mkConfirm("Client delete karein?\n\n"+client,()=>{
+  delete APP.data[client];
+  APP.clients=APP.clients.filter(x=>x!==client);
+  APP.selectedClient=APP.clients[0];
+
+  ensureClientGame();
+  saveApp();
+  renderClients();
+  loadCurrentData();
+  processData();
+  renderGameTotals();
+  });
+}
+
+function renderClients(){
+  const select=document.getElementById("clientSelect");
+  select.innerHTML="";
+
+  APP.clients.forEach(client=>{
+    const option=document.createElement("option");
+    option.value=client;
+    option.textContent=client;
+    option.selected=client===APP.selectedClient;
+    select.appendChild(option);
+  });
+}
+
+document.getElementById("clientSelect").addEventListener("change",function(){
+  APP.selectedClient=this.value;
+  ensureClientGame();
+  saveApp();
+  loadCurrentData();
+  processData();
+  renderGameTotals();
+  renderSaveHistory();
+});
+
+function selectGame(game){
+  APP.selectedGame=game;
+  ensureClientGame();
+  saveApp();
+  renderGames();
+  loadCurrentData();
+  processData();
+  renderGameTotals();
+  renderSaveHistory();
+}
+
+function renderGames(){
+  const select=document.getElementById("gameSelect");
+  if(select)select.value=APP.selectedGame;
+}
+
+function ensureClientGame(){
+  if(!APP.data)APP.data={};
+
+  if(!APP.data[APP.selectedClient])
+    APP.data[APP.selectedClient]={};
+
+  if(!APP.data[APP.selectedClient][APP.selectedGame]){
+    APP.data[APP.selectedClient][APP.selectedGame]={
+      input:"",
+      output:"",
+      total:0,
+      savedTotal:0,
+      entries:[],
+      history:[],
+      dateHistory:[],
+      activeDate:todayKey()
+    };
+  }
+
+  const current=APP.data[APP.selectedClient][APP.selectedGame];
+  rollGameToToday(current);
+
+  if(typeof current.savedTotal!=="number")
+    current.savedTotal=0;
+}
+
+function getCurrent(){
+  ensureClientGame();
+  return APP.data[APP.selectedClient][APP.selectedGame];
+}
+
+function loadCurrentData(){
+  const current=getCurrent();
+  document.getElementById("rawInput").value=current.input||"";
+  document.getElementById("output").textContent=current.output||"";
+  const vs=document.getElementById("verifyStatus");if(vs){vs.className="verify-status "+(current.output?"ok":"");vs.textContent=current.output?"✓ VERIFIED • Saved output loaded":"READY • Offline Verify Engine";}
+}
+
+function renderGameTotals(){
+  const data=getCurrent();
+  recalculateSavedTotal(data);
+  const name=APP.selectedGame==="Gali"?"GALI":APP.selectedGame;
+  const total=Number(data.savedTotal||0);
+  const n=document.getElementById("gameSummaryName");
+  const v=document.getElementById("gameSummaryTotal");
+  if(n)n.textContent=name+" — "+({DB:"Delhi Bazar",SG:"Shri Ganesh",FB:"Faridabad",GB:"Ghaziabad",Gali:"Gali",DS:"Desawar"}[APP.selectedGame]||"");
+  if(v)v.textContent="₹"+formatAmount(total);
+  saveApp();
+}
+
+function renderSaveHistory(){
+  const box=document.getElementById("saveHistoryList"),countEl=document.getElementById("saveHistoryCount");
+  if(!box)return;
+  const data=getCurrent();
+  const history=Array.isArray(data.history)?data.history:[];
+  if(countEl)countEl.textContent=history.length+" SAVE"+(history.length===1?"":"S");
+  box.innerHTML="";
+  if(!history.length){box.innerHTML='<div class="history-empty">Abhi koi saved history nahi hai.</div>';return;}
+  history.slice().reverse().forEach((h,revIndex)=>{
+    const realIndex=history.length-1-revIndex;
+    const item=document.createElement("div");item.className="save-history-item";
+    const top=document.createElement("div");top.className="save-history-top";
+    const meta=document.createElement("div");meta.className="save-history-meta";meta.textContent="#"+(revIndex+1)+" • "+(h.date?displayDate(h.date):"-")+" • "+(h.time||"-");
+    const total=document.createElement("div");total.className="save-history-total";total.textContent="₹"+formatAmount(h.total||0);
+    top.append(meta,total);item.appendChild(top);
+    const preview=document.createElement("div");preview.className="save-history-preview";preview.textContent=h.output||h.input||"";item.appendChild(preview);
+    const actions=document.createElement("div");actions.className="save-history-actions";
+    const del=document.createElement("button");del.className="save-history-delete";del.type="button";del.textContent="DELETE";
+    del.addEventListener("click",()=>deleteSaveHistory(realIndex));actions.appendChild(del);item.appendChild(actions);box.appendChild(item);
+  });
+}
+function deleteSaveHistory(index){
+  const data=getCurrent();if(!Array.isArray(data.history)||!data.history[index])return;
+  const h=data.history[index];
+  mkConfirm("Ye saved history delete karna hai?\n\nDate: "+(h.date?displayDate(h.date):"-")+"\nTime: "+(h.time||"-")+"\nTotal: ₹"+formatAmount(h.total||0),()=>{
+    data.history.splice(index,1);
+    recalculateSavedTotal(data);
+    saveApp();renderGameTotals();renderSaveHistory();
+  },"DELETE SAVE");
+}
+
+function deleteGameTotal(game){
+  if(!APP.data[APP.selectedClient]||!APP.data[APP.selectedClient][game])return;
+  const data=APP.data[APP.selectedClient][game];
+  if(!Number(data.savedTotal||0)&&(!Array.isArray(data.history)||data.history.length===0))return;
+  mkConfirm((game==="Gali"?"GALI":game)+" ka saved data delete karein?",()=>{
+    data.savedTotal=0;data.history=[];data.input="";data.output="";data.entries=[];data.total=0;data.resultNumber="";data.resultAmount=null;
+    saveApp();renderGameTotals();renderSaveHistory();
+  },"DELETE GAME DATA");
+}
+
+function formatAmount(value){
+  if(value===null||value===undefined||value==="")return "";
+  return String(Number(value));
+}
+
+function removeWhatsAppHeader(line){
+  return line.replace(/^\s*\[[^\]]+\]\s*[^:]*:\s*/,"");
+}
+
+function hasMarker(line,marker){
+  return new RegExp("\\b"+marker+"\\b","i").test(line);
+}
+
+/* =========================================================
+   STRICT LINE PARSER — NO MISS / NO CHANGE
+   Numeric input is preserved line-by-line. Symbols are separators/markers;
+   only explicit amount markers are removed from the numeric payload.
+========================================================= */
+function cleanLine(line){return removeWhatsAppHeader(line||"").trim()}
+function amountValue(v){const n=Number(String(v).replace(/,/g,""));return Number.isFinite(n)?n:null}
+function fmtNumToken(t){return String(t)}
+function getPlainNumbers(text){return String(text||"").match(/\d+/g)||[]}
+function reverseNumber(number){return String(number).split("").reverse().join("")}
+function standardOutput(numbers,amount){if(!numbers.length)return "";let t=numbers.map(fmtNumToken).join(" ");if(amount!==null&&amount!==undefined)t+="("+formatAmount(amount)+")";return t}
+function isHaruf(token){return /^\d{3}$/.test(token)&&token[0]===token[1]&&token[1]===token[2]}
+function harufNumbers(token,isA,isAB){const d=token[0],r=[];if(isA||isAB)for(let i=0;i<=9;i++)r.push(d+String(i));if(!isA||isAB)for(let i=0;i<=9;i++)r.push(String(i)+d);return [...new Set(r)]}
+function isExplicitCrossing(line){return /\bcrossing\b|\bcrosing\b/i.test(line)}
+function stripMetadataWords(s){return String(s||"").replace(/\b(?:into|intuu|itno|intu|rs|rupees|plt|palt|palti|palat|wp|crossing|crosing|DB|SG|FB|GB|Gali|DS|Total|TTL|Location|Name|Game|Desswar|Disawar|Desawar)\b/gi," ").replace(/(?<=\d)ke\b|\bke\b/gi," ").replace(/\b(?:A|B|AB)\b/gi," ")}
+function stripLabelsOnly(s){return String(s||"").replace(/\b(?:rs|rupees|DB|SG|FB|GB|Gali|DS|Location|Name|Game|Desswar|Disawar|Desawar|ke)\b/gi," ").replace(/\b(?:Total|TTL)\b.*$/i," ") }
+function normalizeNumericTokens(text){let s=String(text||"");s=stripMetadataWords(s);s=s.replace(/[^\d\s]/g," ");return getPlainNumbers(s)}
+function makeEntry(numbers,amount){const text=standardOutput(numbers,amount);return{text,count:numbers.length,amount,lineTotal:amount==null?0:numbers.length*Number(amount)}}
+function stripTrailingTotalMetadata(line){let s=String(line||"");s=s.replace(/\btotal\b.*$/i," ");s=s.replace(/\bttl\b.*$/i," ");s=s.replace(/\b(?:game\s*total)\b.*$/i," ");s=s.replace(/^\s*\d+\s*[-+]\s*\d+\s*=\s*\d+\s*[+\-]*\s*$/," ");return s.trim()}
+function getReverseAmountAndStrip(line,kind){let amount=null;let re=new RegExp("\\b(?:"+kind+")\\s*(?:[^0-9A-Za-z₹]*\\s*)?(\\d+(?:\\.\\d+)?)","i");let m=line.match(re);if(m){amount=amountValue(m[1]);line=line.replace(m[0]," ")}return{amount,line}}
+function normalizeForCrossing(line){let s=String(line||"");s=s.replace(/\(\s*\d+(?:\.\d+)?\s*\)/g," ");s=s.replace(/\b(?:into|intuu|itno|intu)\b\s*[-:=\/@*x×]*\s*₹?\s*\d+(?:\.\d+)?/gi," ");s=s.replace(/(?:rs\.?|₹)\s*\d+(?:\.\d+)?/gi," ");s=s.replace(/(?:[=@\/*x×]+)\s*\d+(?:\.\d+)?/g," ");return s}
+function crossingDigitsFromLine(line){
+  let s=stripMetadataWords(String(line||""));
+  s=s.replace(/\[\s*\d+(?:\.\d+)?\s*\]/g," ");
+  s=s.replace(/\(\s*\d+(?:\.\d+)?\s*\)/g," ");
+  s=s.replace(/\b(?:into|intuu|itno|intu)\b\s*[-:=\/@*x×]*\s*₹?\s*\d+(?:\.\d+)?/gi," ");
+  s=s.replace(/(?:rs\.?|₹)\s*\d+(?:\.\d+)?/gi," ");
+  s=s.replace(/(?:[=@\/*x×]+)\s*\d+(?:\.\d+)?/g," ");
+  const toks=getPlainNumbers(s);
+  const candidate=toks.find(t=>t.length>=3&&t.length<=8&&new Set(t).size===t.length);
+  if(candidate)return [...candidate];
+  const digits=[];toks.forEach(t=>{for(const d of t){if(!digits.includes(d))digits.push(d)}});return digits;
+}
+function isAutomaticCrossingLine(line){const toks=getPlainNumbers(normalizeForCrossing(stripMetadataWords(line)));return toks.length===1&&toks[0].length>=3&&toks[0].length<=8&&new Set(toks[0]).size===toks[0].length}
+function crossingOutput(digits,amount){const out=[];digits.forEach(a=>digits.forEach(b=>out.push(a+b)));return standardOutput(out,amount)}
+
+function parseLine(originalLine,compactGaliContext=false){
+ let raw=stripTrailingTotalMetadata(cleanLine(originalLine)); if(!raw)return {output:'',total:0,entries:[]};
+ const reverseMarker=/(?:\bplt\b|\bpalt\b|\bpalti\b|\bpalat\b)/i.test(raw), wp=/\bwp\b/i.test(raw);
+ const revAmM=raw.match(/(?:plt|palt|palti|palat|wp)\s*(?:[=@/:*_-]+\s*)?(\d+(?:\.\d+)?)/i); const revAmt=revAmM?amountValue(revAmM[1]):null;
+ let mode=null; if(/(?:^|[^a-z])ab(?:$|[^a-z])/i.test(raw)||/\bab(?=\s|\d|[.=+*_-])/i.test(raw))mode='AB'; else if(/(?:\bander\b|\bandar\b|(?:^|[^a-z])a(?:$|[^a-z]))/i.test(raw))mode='A'; else if(/\bbahar\b|(?:^|[^a-z])b(?:$|[^a-z])/i.test(raw))mode='B';
+ let work=raw.replace(/\b(?:DS|DB|SG|FB|GB|Gali|Desawar|Disawar|Desswar|Ghaziabad|Rohtak|Sai|Player|Khl|Khai|Game|Location|Name|Total|TTL|Totel|TL)\b/gi,' ')
+              .replace(/\b(?:plt|palt|palti|palat|wp|crossing|crosing|jc)\b/gi,' ')
+              .replace(/\b(?:RS|rupees)\b/gi,' ')
+              .replace(/\b(?:kee|ke)\b/gi,' ')
+              .replace(/\b(?:A|B|AB)\b/gi,' ')
+              .replace(/\b(?:bahar|ander|andar)\b/gi,' ')
+              .trim();
+ // STRICT JODI * AMOUNT RULE — e.g. 25*100, 35*100, 20*100 => 25(100), 35(100), 20(100)
+ // This is handled before generic symbol parsing so the amount is never dropped.
+ const starPairs=[...work.matchAll(/(?:^|[\s,;\n]+)(\d{1,3})\s*\*\s*(\d+(?:\.\d+)?)(?=$|[\s,;]+)/g)];
+ if(starPairs.length){
+   const covered=starPairs.map(x=>x[0]).join(' ').trim();
+   const leftovers=work.replace(/(?:^|[\s,;\n]+)\d{1,3}\s*\*\s*\d+(?:\.\d+)?(?=$|[\s,;]+)/g,' ').trim();
+   if(!/\d/.test(leftovers)){
+     const pes=starPairs.map(pm=>makeEntry([pm[1]],amountValue(pm[2])));
+     return {output:pes.map(e=>e.text).join('\n'),total:pes.reduce((a,e)=>a+e.lineTotal,0),entries:pes};
+   }
+ }
+ // A single middle '=amount' marker inside a multi-line folder applies to the whole folder.
+ const midFolder=work.match(/[=@/*x×_+\-:]\s*(\d+(?:\.\d+)?)\b(?=\s*(?:[\d\s.,:;+\-_*\/=]*))?/);
+ if(midFolder){
+   const rest=work.slice(midFolder.index+midFolder[0].length);
+   const preNums=(work.slice(0,midFolder.index).match(/\d+/g)||[]).filter(n=>n.length>=2);
+   const restNums=(rest.match(/\d+/g)||[]).filter(n=>n.length>=2);
+   if(preNums.length && restNums.length && !/(?:into|intuu|itno|intu|ki|की|\(|\[|\{|₹|rs\b|rupees\b)/i.test(rest)){
+     const all=preNums.concat(restNums); const a=amountValue(midFolder[1]);
+     const e=makeEntry(all,a);return{output:e.text,total:e.lineTotal,entries:[e]};
+   }
+ }
+ // SYMBOL BEFORE AMOUNT RULE:
+ // Any number of amount-marker symbols may appear before the amount.
+ // Examples: ((50), (((50)), **50, *50, .....20
+ // A single comma/dot is NOT treated as an amount marker so normal jodi
+ // separators like 12,34 remain safe.
+ const parMatches=[...work.matchAll(/(?:[\(\[\{\*#@=\/₹]+|[\.,:;_+\-]{2,})\s*(\d+(?:\.\d+)?)(?:\s*[\)\]\}]+)?/g)];
+ if(parMatches.length){
+   const pes=[]; let pc=0;
+   for(const pm of parMatches){
+     const seg=work.slice(pc,pm.index);
+     const nums=(seg.match(/\d+/g)||[]).filter(Boolean);
+     if(nums.length){
+       // Repeated haruf tokens: each haruf is its own output line.
+       if(nums.every(isHaruf)|| (mode&&nums.every(n=>n.length===1||isHaruf(n)))){
+         nums.forEach(n=>{const tri=n.length===1?n.repeat(3):n;const fa=Number(pm[1])/10;pes.push(makeEntry(harufNumbers(tri,mode||'B'),fa));});
+       }else if(nums.length===1&&nums[0].length>=3&&nums[0].length<=8&&new Set(nums[0]).size===nums[0].length&&!/\b(?:jc|joda\s*cut|jodacut)\b/i.test(raw)){const ds=[...nums[0]],pairs=[];ds.forEach(a=>ds.forEach(b=>pairs.push(a+b)));pes.push({text:standardOutput(pairs,amountValue(pm[1])),count:pairs.length,amount:amountValue(pm[1]),lineTotal:pairs.length*amountValue(pm[1])});}else pes.push(makeEntry(nums,amountValue(pm[1])));
+     }
+     pc=pm.index+pm[0].length;
+   }
+   const tail=(work.slice(pc).match(/\d+/g)||[]).filter(n=>n.length>=2);
+   // Only add tail numbers if they occur after a marker and are not just metadata.
+   if(tail.length && parMatches.length===1 && !/(?:into|intuu|itno|intu)\b/i.test(work.slice(pc))) pes.push(makeEntry(tail,null));
+   if(pes.length){
+     if((reverseMarker||wp)){const ra=revAmt!==null?revAmt:(pes[0].amount);const rev=[];pes.forEach(e=>{const ns=(e.text.match(/\b\d{2,3}\b/g)||[]);if(ns.length)rev.push(makeEntry(ns.map(reverseNumber),ra));});pes.push(...rev)}
+     return{output:pes.map(e=>e.text).join('\n'),total:pes.reduce((a,e)=>a+e.lineTotal,0),entries:pes};
+   }
+ }
+ let markers=[]; let m;
+ // Explicit crossing is resolved before generic markers so '98346/10/crossing' works.
+ const crossingRequested=/\bcrossing\b|\bcrosing\b/i.test(raw);
+ if(crossingRequested){
+   const toks=(work.match(/\d+/g)||[]);
+   const cand=toks.find(t=>t.length>=3&&t.length<=8&&new Set(t).size===t.length);
+   if(cand){
+     let cam=null;
+     const cm1=work.match(new RegExp(cand.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'[^0-9]*?(\d+(?:\.\d+)?)\s*(?=crossing|crosing)','i'));
+     if(cm1)cam=amountValue(cm1[1]);
+     if(cam===null){const idx=work.indexOf(cand),after=work.slice(idx+cand.length);const cm2=after.match(/(?:[\/=@*+_:-]|\binto\b)[^0-9A-Za-z₹]*(\d+(?:\.\d+)?)/i);if(cm2)cam=amountValue(cm2[1]);}
+     if(cam===null){const cm3=work.match(/\b(\d+(?:\.\d+)?)\s*(?=crossing|crosing)/i);if(cm3)cam=amountValue(cm3[1]);}
+     if(cam!==null){const ds=[...cand],pairs=[];if(!/\b(?:jc|joda\s*cut|jodacut)\b/i.test(raw)){ds.forEach(a=>ds.forEach(b=>pairs.push(a+b)));}else pairs.push(cand);const ce={text:standardOutput(pairs,cam),count:pairs.length,amount:cam,lineTotal:pairs.length*cam};return{output:ce.text,total:ce.lineTotal,entries:[ce]};}
+   }
+ }
+ // into with amount after
+ let into=/\b(?:into|intuu|itno|intu)\b\s*[^0-9A-Za-z₹]*\s*(\d+(?:\.\d+)?)/gi; while((m=into.exec(work)))markers.push({start:m.index,end:into.lastIndex,amount:amountValue(m[1]),kind:'into'});
+ // amount before into: 5intu or RS25 into
+ let preInto=/(\d+(?:\.\d+)?)\s*[.,:;\/_=+\-*]*\s*(?=into\b|intuu\b|itno\b|intu\b)/gi; while((m=preInto.exec(work))){const n=(m[0].match(/\d+(?:\.\d+)?/)||[])[0]; if(n){const st=m.index+m[0].lastIndexOf(n);markers.push({start:st,end:st+n.length,amount:amountValue(n),kind:'preinto'});}}
+ // parentheses / square / curly amounts
+ for(const re of [/\(\s*(\d+(?:\.\d+)?)/g,/\[\s*(\d+(?:\.\d+)?)\s*\]/g,/\{\s*(\d+(?:\.\d+)?)\s*\}/g]){while((m=re.exec(work)))markers.push({start:m.index,end:re.lastIndex,amount:amountValue(m[1]),kind:'bracket'});}
+ // attached RS amount: 58,35rs or 52rs25
+ let rs=/\b(\d+(?:\.\d+)?)\s*(?=rs\b|rupees\b)/gi; while((m=rs.exec(raw))){const st=m.index;markers.push({start:st,end:st+m[0].length,amount:amountValue(m[1]),kind:'rs'});}
+ // currency amount marker: ₹10
+ let curr=/₹\s*(\d+(?:\.\d+)?)/g; while((m=curr.exec(work)))markers.push({start:m.index,end:curr.lastIndex,amount:amountValue(m[1]),kind:'currency'});
+ // ki marker: 35ki
+ let ki=/(\d+(?:\.\d+)?)\s*(?:की|ki)\b/gi; while((m=ki.exec(work)))markers.push({start:m.index,end:ki.lastIndex,amount:amountValue(m[1]),kind:'ki'});
+ // ka marker: 50=ka
+ let ka=/(\d+(?:\.\d+)?)\s*[=@:._-]*\s*(?:का|ka)\b/gi; while((m=ka.exec(work)))markers.push({start:m.index,end:ka.lastIndex,amount:amountValue(m[1]),kind:'ka'});
+ // attached AB/A/B amount: 100ab
+ let hab=/(\d+(?:\.\d+)?)\s*(?:ab|a|b)\b/gi; while((m=hab.exec(raw))){const n=m[1];if(!(n.length===3&&isHaruf(n)))markers.push({start:m.index,end:m.index+m[0].length,amount:amountValue(n),kind:'harufAmount'});}
+ // haruf marker with final bare amount
+ if(mode){let ht=work.match(/(?:^|[\s.:,;_=+*/_-])(\d+(?:\.\d+)?)\s*$/);if(ht){const st=ht.index+ht[0].lastIndexOf(ht[1]);markers.push({start:st,end:st+ht[1].length,amount:amountValue(ht[1]),kind:'harufTail'});}}
+ // generic symbol amount: also recognize a middle marker when the amount token is 1 digit (or 3+), leaving following jodis in the same folder.
+ let mid=/(?:[=@/*x×_+\-:]\s*)(\d+(?:\.\d+)?)\b/g; while((m=mid.exec(work))){const rest=work.slice(m.index+m[0].length);const okRest=/^(?:[\s.,:;\+\-_*\/=]*\d{1,2}\b[\s.,:;\+\-_*\/=]*)*$/.test(rest)&&!/(?:into|intuu|itno|intu|ki|की)\b/i.test(rest);const pre=work.slice(0,m.index);if(okRest&&(pre.match(/\d{2}/g)||[]).length)markers.push({start:m.index+m[0].lastIndexOf(m[1]),end:m.index+m[0].length,amount:amountValue(m[1]),kind:'genericMid'});}
+ // final generic symbol amount
+ let gm=work.match(/[=@/*x×_+\-:]\s*(\d+(?:\.\d+)?)\s*$/); if(gm){const st=gm.index+gm[0].indexOf(gm[1]);markers.push({start:st,end:gm.index+gm[0].length,amount:amountValue(gm[1]),kind:'generic'});}
+ // Repeated symbol marker before amount: **50, (((50)), .....20, etc.
+ let gsm=work.match(/(?:[\(\[\{\*#@=\/₹]+|[\.,:;_+\-]{2,})\s*(\d+(?:\.\d+)?)(?:\s*[\)\]\}]+)?\s*$/);
+ if(gsm){const st=gsm.index+gsm[0].indexOf(gsm[1]);markers.push({start:st,end:gsm.index+gsm[0].length,amount:amountValue(gsm[1]),kind:'multiSymbol'});}
+ // final bare amount only for haruf mode (0=1 bahar 300)
+ if(mode){let bm=work.match(/(?:^|[\s.,;:=+*/_-])(\d+(?:\.\d+)?)\s*$/);if(bm){const st=bm.index+bm[0].lastIndexOf(bm[1]);markers.push({start:st,end:st+bm[1].length,amount:amountValue(bm[1]),kind:'bareHarufAmount'});}}
+ markers.sort((a,b)=>a.start-b.start || a.end-b.end);
+ const filtered=[]; for(const x of markers){if(filtered.some(y=>x.start>=y.start&&x.start<y.end))continue;filtered.push(x)}
+ // If INTO already has an amount after the keyword, do not treat the number before INTO as an amount.
+ markers=filtered.filter(x=>!(x.kind==="preinto" && filtered.some(y=>y.kind==="into" && y.start>x.end)));
+ function segment(seg,amt){
+   const nums=(seg.match(/\d+/g)||[]).filter(Boolean);if(!nums.length)return[];
+   if(mode && nums.every(n=>isHaruf(n)||n.length===1)) return nums.map(n=>{const tri=n.length===1?n.repeat(3):n;const fa=amt==null?null:Number(amt)/10;return makeEntry(harufNumbers(tri,mode),fa)});
+   if(!mode && nums.every(isHaruf)) return nums.map(n=>makeEntry(harufNumbers(n,'B'),amt==null?null:Number(amt)/10));
+   if(nums.length===1 && isHaruf(nums[0])){const fa=amt==null?null:Number(amt)/10;return [makeEntry(harufNumbers(nums[0],mode||'B'),fa)]}
+   const cross=/\bcrossing\b|\bcrosing\b/i.test(raw), n0=nums.length===1?nums[0]:null;
+   if(cross&&n0){if(/\b(?:jc|joda\s*cut|jodacut)\b/i.test(raw))return [makeEntry([n0],amt)];const ds=[...n0],pairs=[];ds.forEach(a=>ds.forEach(b=>pairs.push(a+b)));return[{text:standardOutput(pairs,amt),count:pairs.length,amount:amt,lineTotal:amt==null?0:pairs.length*Number(amt)}]}
+   if(n0&&n0.length>=3&&n0.length<=8&&new Set(n0).size===n0.length){const ds=[...n0],pairs=[];ds.forEach(a=>ds.forEach(b=>pairs.push(a+b)));return[{text:standardOutput(pairs,amt),count:pairs.length,amount:amt,lineTotal:amt==null?0:pairs.length*Number(amt)}]}
+   return [makeEntry(nums,amt)];
+ }
+ if(!markers.length){const nums=(work.match(/\d+/g)||[]);return{output:nums.length?standardOutput(nums,null):'',total:0,entries:nums.length?[makeEntry(nums,null)]:[]}}
+ const entries=[];let cursor=0;
+ for(const mk of markers){const seg=work.slice(cursor,mk.start);entries.push(...segment(seg,mk.amount));cursor=mk.end}
+ const tailNums=(work.slice(cursor).match(/\d+/g)||[]).filter(n=>n.length>=2);if(tailNums.length)entries.push(...segment(work.slice(cursor),null));
+ if((reverseMarker||wp)&&entries.length){const ra=revAmt!==null?revAmt:(entries[0].amount);const rev=[];for(const e of entries){const ns=(e.text.match(/\b\d{2,3}\b/g)||[]);if(ns.length)rev.push(makeEntry(ns.map(reverseNumber),ra))}entries.push(...rev)}
+ return{output:entries.map(e=>e.text).join('\n'),total:entries.reduce((a,e)=>a+e.lineTotal,0),entries};
+}
+
+function parseInputStrict(input){
+ const lines=String(input).split(/\r?\n/);let out=[],entries=[],total=0,buf=[];let blockHasAmount=false;
+ const flush=()=>{if(!buf.length)return;const r=parseLine(buf.join(' '));if(r.output)out.push(r.output);entries.push(...r.entries);total+=r.total;buf=[];blockHasAmount=false};
+ const amountLine=l=>/\(\s*\d|\[\s*\d|\{\s*\d|\b(?:into|intuu|itno|intu)\b\s*[^0-9A-Za-z₹]*\d|\d+(?:\.\d+)?\s*(?:की|ki)\b|\d+(?:\.\d+)?\s*(?:rs|rupees)\b|₹\s*\d|[=@/*x×_+\-:]\s*\d+(?:\.\d+)?\s*$|\b(?:bahar|ander|andar|ab)\b/i.test(l);
+ const onlyLabel=l=>/^(?:ds|db|sg|fb|gb|gali|desawar|disawar|ghaziabad|faridabad|shri\s*ganesh|delhi\s*bazar)\b[\s.:]*$/i.test(l);
+ for(const rawLine of lines){const l=cleanLine(rawLine);if(!l)continue;if(/^(?:total|ttl|game\s*total|t\.?)\b/i.test(l)){flush();continue}
+   if(onlyLabel(l)){flush();continue}
+   if(amountLine(l)){buf.push(l);blockHasAmount=true;continue}
+   if(/\d/.test(l)){buf.push(l);continue}
+ }
+ flush(); return{output:out.join('\n'),entries,total};
+}
+
+function getSavedEntries(data){
+  const all=[];
+  if(Array.isArray(data.history)){
+    data.history.forEach(h=>{
+      if(h&&typeof h.input==="string"&&h.input.trim()){
+        const compactGaliContext=/\b(?:gl|gali)\b/i.test(h.input);
+        h.input.split(/\r?\n/).forEach(line=>{const r=parseLine(line,compactGaliContext);if(r.entries)r.entries.forEach(e=>all.push(e));});
+      }else if(Array.isArray(h&&h.entries)){
+        h.entries.forEach(e=>all.push(e));
+      }
+    });
+  }
+  return all;
+}
+
+function recalculateSavedTotal(data){
+  if(!data)return 0;
+  if(!Array.isArray(data.history)||!data.history.length)return Number(data.savedTotal||0);
+  let total=0;
+  data.history.forEach(h=>{
+    if(Array.isArray(h&&h.entries)&&h.entries.length){h.entries.forEach(e=>{total+=Number(e&&e.lineTotal||0)});return;}
+    if(h&&typeof h.input==="string"&&h.input.trim()){
+      const compactGaliContext=/\b(?:gl|gali)\b/i.test(h.input);
+      h.input.split(/\r?\n/).forEach(line=>{const r=parseLine(line,compactGaliContext);(r.entries||[]).forEach(e=>{total+=Number(e.lineTotal||0)});});
+    }
+  });
+  data.savedTotal=total;
+  return total;
+}
+
+function getAmountBreakdown(data){
+  const map={};
+  getSavedEntries(data).forEach(e=>{
+    if(e.amount===null||e.amount===undefined||e.amount==="")return;
+    const amount=Number(e.amount);
+    const value=Number(e.lineTotal!==undefined?e.lineTotal:amount*Number(e.count||0))||0;
+    const key=String(amount);map[key]=(map[key]||0)+value;
+  });
+  return Object.keys(map).sort((a,b)=>Number(a)-Number(b)).map(k=>k+" → "+formatAmount(map[k]));
+}
+
+function getAllResultPassAmounts(number,data=getCurrent()){
+  const wanted=String(number).padStart(2,"0");
+  const entries=getSavedEntries(data).concat(Array.isArray(data.entries)?data.entries:[]);
+  const amounts=[];
+  entries.forEach(e=>{
+    if(!e||e.amount===null||e.amount===undefined||e.amount==="")return;
+    const nums=String(e.text||"").replace(/\(\s*\d+(?:\.\d+)?\s*\)$/,'').match(/\b\d{2,3}\b/g)||[];
+    nums.forEach(n=>{if(n===wanted)amounts.push(Number(e.amount));});
+  });
+  return amounts;
+}
+
+function saveResultForSelectedGame(number,amount){
+  const data=getCurrent();
+  data.resultNumber=String(number).padStart(2,"0");
+  data.resultAmount=amount===null?null:Number(amount);
+  saveApp();
+}
+
+function closeModalOutside(event,id){
+  const modal=document.getElementById(id);
+  if(modal && event.target===modal)modal.classList.remove("show");
+}
+function getJodiAmountTable(data){
+  const map={};
+  for(let i=0;i<100;i++)map[String(i).padStart(2,"0")]=0;
+  getSavedEntries(data).forEach(e=>{
+    if(!e || e.amount===null || e.amount===undefined || e.amount==="")return;
+    const amount=Number(e.amount)||0;
+    const nums=String(e.text||"").replace(/\(\s*\d+(?:\.\d+)?\s*\)\s*$/,'').match(/\b\d{2}\b/g)||[];
+    nums.forEach(n=>{if(Object.prototype.hasOwnProperty.call(map,n))map[n]+=amount;});
+  });
+  return map;
+}
+function getMasterGame(){return document.getElementById("masterGameSelect")?.value||APP.selectedGame||"DB";}
+function getGameDataForMaster(game){return (APP.data&&APP.data[APP.selectedClient]&&APP.data[APP.selectedClient][game])||{savedTotal:0,history:[],entries:[],activeDate:todayKey()};}
+let MASTER_ADJUST={game:"",cut:0,less:0};
+let MASTER_RETURN_GAME="DB";
+function masterBaseMap(game){return getJodiAmountTable(getGameDataForMaster(game));}
+function masterAdjustedMap(game){
+  const base=masterBaseMap(game),out={};
+  const cut=Number(MASTER_ADJUST.game===game?MASTER_ADJUST.cut:0)||0;
+  const less=Number(MASTER_ADJUST.game===game?MASTER_ADJUST.less:0)||0;
+  Object.keys(base).forEach(n=>{let v=Number(base[n])||0;if(cut>0&&v>0)v=Math.max(0,v-cut);if(less>0&&v>0)v=Math.max(0,v-(v*less/100));out[n]=Math.round(v*100)/100;});
+  return out;
+}
+function renderMasterPage(){
+  const game=getMasterGame();
+  if(MASTER_ADJUST.game!==game)MASTER_ADJUST={game:game,cut:0,less:0};
+  const data=getGameDataForMaster(game);recalculateSavedTotal(data);
+  const label=({DB:"Delhi Bazar",SG:"Shri Ganesh",FB:"Faridabad",GB:"Ghaziabad",Gali:"Gali",DS:"Desawar"}[game]||game);
+  const sub=document.getElementById("masterPageSub");if(sub)sub.textContent=label+" • "+displayDate(data.activeDate||todayKey());
+  const gt=document.getElementById("masterTableGame");if(gt)gt.textContent=(game==="Gali"?"GALI":game)+" — "+label;
+  const dt=document.getElementById("masterTableDate");if(dt)dt.textContent=displayDate(data.activeDate||todayKey());
+  const info=document.getElementById("masterAdjustInfo");const parts=[];if(MASTER_ADJUST.cut)parts.push("CUTTING ₹"+formatAmount(MASTER_ADJUST.cut));if(MASTER_ADJUST.less)parts.push("LESS "+formatAmount(MASTER_ADJUST.less)+"%");if(info)info.textContent=parts.length?parts.join(" • "):"No cutting / less applied.";
+  const grid=document.getElementById("masterNumberGrid");if(!grid)return;
+  const map=masterAdjustedMap(game);grid.innerHTML="";let total=0;
+  for(let i=1;i<=100;i++){const display=String(i).padStart(2,"0"),key=i===100?"00":display,amt=Number(map[key]||0);total+=amt;const cell=document.createElement("div");cell.className="master-number-row"+(amt?" has-amount":" zero");cell.innerHTML='<div class="master-number">'+display+'</div><div class="master-amount">'+(amt?"₹"+formatAmount(amt):"—")+'</div>';grid.appendChild(cell);}
+  const totalEl=document.getElementById("masterGrandTotal");if(totalEl)totalEl.textContent="₹"+formatAmount(total);
+}
+function renderGameHistory(){
+  const box=document.getElementById("gameHistoryList");if(!box)return;
+  const data=getCurrent();
+  const label=getGameLabel(APP.selectedGame);
+  const sub=document.getElementById("gameHistorySub");if(sub)sub.textContent=label+" • "+displayDate(data.activeDate||todayKey());
+  const history=Array.isArray(data.history)?data.history:[];
+  box.innerHTML="";
+  if(!history.length){box.innerHTML='<div class="game-history-empty">Abhi koi saved history nahi hai.</div>';return;}
+  history.slice().reverse().forEach((h,revIndex)=>{
+    const realIndex=history.length-1-revIndex;
+    const item=document.createElement("div");item.className="game-history-item";
+    const top=document.createElement("div");top.className="game-history-top";
+    const meta=document.createElement("div");meta.className="game-history-meta";meta.textContent="#"+(revIndex+1)+" • "+(h.date?displayDate(h.date):"-")+" • "+(h.time||"-");
+    const total=document.createElement("div");total.className="game-history-total";total.textContent="₹"+formatAmount(h.total||0);
+    top.append(meta,total);item.appendChild(top);
+    const preview=document.createElement("div");preview.className="game-history-preview";preview.textContent=h.output||h.input||"";item.appendChild(preview);
+    const actions=document.createElement("div");actions.className="game-history-actions";
+    const del=document.createElement("button");del.className="game-history-delete";del.type="button";del.textContent="DELETE";
+    del.addEventListener("click",()=>deleteGameHistory(realIndex));actions.appendChild(del);item.appendChild(actions);box.appendChild(item);
+  });
+}
+function showGameHistory(){
+  const page=document.getElementById("gameHistoryPage");if(!page)return;
+  renderGameHistory();
+  document.getElementById("app")?.classList.remove("ready");
+  document.getElementById("masterPage")?.classList.remove("show");
+  document.getElementById("finalPage")?.classList.remove("show");
+  page.classList.add("show");window.scrollTo(0,0);
+  if(!(history.state&&history.state.page==="gameHistory"))history.pushState({page:"gameHistory"},"","#history");
+}
+function closeGameHistory(){
+  document.getElementById("gameHistoryPage")?.classList.remove("show");
+  document.getElementById("app")?.classList.add("ready");
+  if(history.state&&history.state.page==="gameHistory")history.back();
+}
+function deleteGameHistory(index){
+  const data=getCurrent();if(!Array.isArray(data.history)||!data.history[index])return;
+  const h=data.history[index];
+  mkConfirm("Ye saved history delete karna hai?\n\nDate: "+(h.date?displayDate(h.date):"-")+"\nTime: "+(h.time||"-")+"\nTotal: ₹"+formatAmount(h.total||0),()=>{
+    data.history.splice(index,1);
+    recalculateSavedTotal(data);
+    saveApp();renderGameTotals();renderGameHistory();
+  },"DELETE HISTORY");
+}
+
+function showMaster(){
+  const page=document.getElementById("masterPage");if(!page)return;MASTER_RETURN_GAME=APP.selectedGame||"DB";
+  const select=document.getElementById("masterGameSelect");if(select)select.value=APP.selectedGame||"DB";
+  renderMasterPage();document.getElementById("app")?.classList.remove("ready");page.classList.add("show");window.scrollTo(0,0);
+  if(!(history.state&&history.state.page==="master"))history.pushState({page:"master"},"","#master");
+}
+function closeMaster(){
+  APP.selectedGame=MASTER_RETURN_GAME||APP.selectedGame||"DB";ensureClientGame();saveApp();renderGames();loadCurrentData();processData();renderGameTotals();
+  if(history.state&&history.state.page==="master")history.back();else showAppPage();
+}
+function masterCutting(){mkPrompt("Har selected number ke amount me se kitne ₹ CUT karne hain?",MASTER_ADJUST.cut||"",v=>{const n=amountValue(v);if(n===null||n<0){alert("Valid cutting amount enter karein.");return;}MASTER_ADJUST.cut=n;MASTER_ADJUST.game=getMasterGame();renderMasterPage();},"CUTTING","₹ Amount","decimal");}
+function masterLess(){mkPrompt("Har amount me se kitna LESS % karna hai? (0–100)",MASTER_ADJUST.less||"",v=>{const n=amountValue(v);if(n===null||n<0||n>100){alert("0 se 100 tak percentage enter karein.");return;}MASTER_ADJUST.less=n;MASTER_ADJUST.game=getMasterGame();renderMasterPage();},"LESS %","Percentage","decimal");}
+async function masterCopy(){
+  const game=getMasterGame(),map=masterAdjustedMap(game),lines=[];
+  for(let i=1;i<=100;i++){const display=String(i).padStart(2,"0"),key=i===100?"00":display,amt=Number(map[key]||0);if(amt>0)lines.push(display+"("+formatAmount(amt)+")");}
+  const text=lines.join("\n");if(!text){alert("Copy ke liye koi amount nahi hai.");return;}
+  try{await navigator.clipboard.writeText(text);alert("MASTER DATA COPIED");}catch(e){const t=document.createElement("textarea");t.value=text;document.body.appendChild(t);t.select();document.execCommand("copy");t.remove();alert("MASTER DATA COPIED");}
+}
+function masterSave(){
+  const game=getMasterGame(),data=getGameDataForMaster(game),map=masterAdjustedMap(game),rows=[];
+  for(let i=1;i<=100;i++){const display=String(i).padStart(2,"0"),key=i===100?"00":display;rows.push({number:display,amount:Number(map[key]||0)});}
+  mkConfirm("Current MASTER adjustment save karna hai?\n\nGame: "+(game==="Gali"?"GALI":game)+"\nCutting: ₹"+formatAmount(MASTER_ADJUST.cut||0)+"\nLess: "+formatAmount(MASTER_ADJUST.less||0)+"%",()=>{
+    if(!Array.isArray(data.masterHistory))data.masterHistory=[];
+    data.masterHistory.push({date:data.activeDate||todayKey(),cut:Number(MASTER_ADJUST.cut||0),less:Number(MASTER_ADJUST.less||0),rows});
+    saveApp();showToast("MASTER DATA SAVED");
+  },"SAVE MASTER");
+}
+
+function addResultOnly(){
+  const data=getCurrent();
+  const label=getGameLabel(APP.selectedGame);
+  const modal=document.getElementById("resultModal"),gl=document.getElementById("resultGameLabel"),inp=document.getElementById("resultNumberInput");
+  if(gl)gl.textContent=label+" • "+displayDate(data.activeDate||todayKey());
+  if(inp)inp.value=data.resultNumber||"";
+  if(modal)modal.classList.add("show");
+  setTimeout(()=>inp?.focus(),80);
+  if(!(history.state&&history.state.page==="result"))history.pushState({page:"result"},"","#result");
+}
+function closeResultModal(){
+  document.getElementById("resultModal")?.classList.remove("show");
+  document.getElementById("actionDialog")?.classList.remove("show");MK_DIALOG_OK=null;MK_DIALOG_OPEN=false;
+  if(history.state&&history.state.page==="result")history.back();
+}
+function saveResultPopup(){
+  const v=(document.getElementById("resultNumberInput")?.value||"").trim();
+  if(!/^\d{1,2}$/.test(v)){alert("00 se 99 tak result number enter karein.");return;}
+  const n=String(Number(v)).padStart(2,"0"),data=getCurrent();
+  mkConfirm("Result SAVE karna hai?\n\nGame: "+getGameLabel(APP.selectedGame)+"\nResult: "+n,()=>{
+    data.resultNumber=n;data.resultAmount=null;
+    if(!Array.isArray(data.resultHistory))data.resultHistory=[];
+    data.resultHistory.push({date:data.activeDate||todayKey(),number:n,time:new Date().toLocaleTimeString()});
+    saveApp();document.getElementById("resultModal")?.classList.remove("show");
+    if(history.state&&history.state.page==="result")history.back();
+  },"SAVE RESULT");
+}
+function getGameLabel(game){return ({DB:"Delhi Bazar",SG:"Shri Ganesh",FB:"Faridabad",GB:"Ghaziabad",Gali:"Gali",DS:"Desawar"}[game]||game)}
+function getCurrentDayGame(client,game){const d=APP.data?.[client]?.[game];if(!d)return null;rollGameToToday(d);return d;}
+function getWinningAmount(data){if(!data?.resultNumber)return 0;return Number(getJodiAmountTable(data)[String(data.resultNumber).padStart(2,"0")]||0);}
+function getGamePassing(data){const win=getWinningAmount(data),pair=Number(getClientMeta(APP.selectedClient).pair||0);return win>0&&pair>0?win*pair:0;}
+function renderFinalPage(){
+  const client=APP.selectedClient||"",allGames=["DB","SG","FB","GB","Gali","DS"],meta=getClientMeta(client),commRate=Number(meta.comm||0),box=document.getElementById("finalGames");if(!box)return;
+  let total=0,passing=0;box.innerHTML='<div class="final-game-row head"><div>GAME</div><div>RESULT</div><div>TOTAL</div><div>PASSING</div></div>';
+  allGames.forEach(game=>{const d=getCurrentDayGame(client,game),gt=Number(d?.savedTotal||0),pass=getGamePassing(d);total+=gt;passing+=pass;const row=document.createElement("div");row.className="final-game-row"+(pass?"":" loss");row.innerHTML='<div class="gname">'+escapeHtml(getGameLabel(game))+'</div><div class="num">'+(d?.resultNumber||"—")+'</div><div class="amt">₹'+formatAmount(gt)+'</div><div class="pass">₹'+formatAmount(pass)+'</div>';box.appendChild(row);});
+
+  // Final calculation rule:
+  // Commission + Passing are added first. If that combined amount is greater than
+  // Total Game, the balance is ++; otherwise the balance is --.
+  const commission=total*commRate/100;
+  const combined=commission+passing;
+  const net=combined-total;
+  const sign=net>=0?"++":"--";
+  const base=Math.abs(net);
+  const pattiRate=Number(meta.patti||0);
+  const pattiAmount=pattiRate>0?base*pattiRate/100:0;
+  const finalAmount=base-pattiAmount;
+
+  document.getElementById("finalPageSub").textContent="TODAY • "+displayDate(todayKey());
+  document.getElementById("finalClientName").textContent=client||"—";
+  document.getElementById("finalTotalGame").textContent="₹"+formatAmount(total);
+  document.getElementById("finalCommissionLabel").textContent="Commission ("+formatAmount(commRate)+"%)";
+  document.getElementById("finalCommission").textContent="₹"+formatAmount(commission);
+  document.getElementById("finalPassing").textContent="₹"+formatAmount(passing);
+
+  const pattiRow=document.getElementById("finalPattiRow"),pattiLabel=document.getElementById("finalPattiLabel"),pattiEl=document.getElementById("finalPatti"),adjustRow=document.getElementById("finalAdjustedRow"),adjustEl=document.getElementById("finalAdjusted");
+  if(pattiRate>0){
+    pattiRow.style.display="flex";
+    adjustRow.style.display="flex";
+    pattiLabel.textContent="Patti ("+formatAmount(pattiRate)+"%)";
+    pattiEl.textContent="₹"+formatAmount(pattiAmount);
+    adjustEl.textContent="₹"+formatAmount(finalAmount)+sign;
+  }else{
+    pattiRow.style.display="none";
+    adjustRow.style.display="flex";
+    adjustEl.textContent="₹"+formatAmount(base)+sign;
+  }
+
+  // Keep the detailed final text in the section, but do not show the old Profit/Loss line.
+  let out="Total Game = "+formatAmount(total)+"\nCommission ("+formatAmount(commRate)+"%) = "+formatAmount(commission)+"\nPassing Total = "+formatAmount(passing);
+  if(pattiRate>0)out+="\nPatti ("+formatAmount(pattiRate)+"%) = "+formatAmount(pattiAmount)+"\nFinal Amount = "+formatAmount(finalAmount)+sign;
+  else out+="\nFinal Amount = "+formatAmount(base)+sign;
+  document.getElementById("finalOutput").textContent=out;
+}
+function showFinalPage(){renderFinalPage();document.getElementById("app")?.classList.remove("ready");document.getElementById("masterPage")?.classList.remove("show");document.getElementById("finalPage")?.classList.add("show");window.scrollTo(0,0);if(!(history.state&&history.state.page==="final"))history.pushState({page:"final"},"","#final");}
+function closeFinalPage(){document.getElementById("finalPage")?.classList.remove("show");document.getElementById("app")?.classList.add("ready");if(history.state&&history.state.page==="final")history.back();}
+async function copyFinal(){const text=document.getElementById("finalOutput")?.textContent||"";if(!text)return;try{await navigator.clipboard.writeText(text);showToast("FINAL DATA COPIED");}catch(e){const t=document.createElement("textarea");t.value=text;document.body.appendChild(t);t.select();document.execCommand("copy");t.remove();showToast("FINAL DATA COPIED");}}
+
+
+/* =========================================================
+   MK MASTER RULES UPDATE — INPUT / OUTPUT ONLY
+   Strict user-defined parser. Other app functions untouched.
+========================================================= */
+function mkCleanRaw(line){
+  let s=String(line||'');
+  s=s.replace(/^\s*\[[^\]]+\]\s*[^:]*:\s*/, '');
+  s=s.replace(/^\s*M\s*:\s*/i,'');
+  return s.trim();
+}
+function mkAmount(v){const n=Number(String(v).replace(/,/g,''));return Number.isFinite(n)?n:null}
+function mkEntry(ns,a){return makeEntry(ns.map(String),a)}
+function mkPairsCross(ds,jt){const out=[];for(const a of ds)for(const b of ds)if(!jt||a!==b)out.push(a+b);return out}
+function mkHaruf(tri,mode){
+  const d=tri[0],out=[];
+  if(mode==='A'||mode==='AB')for(let i=0;i<10;i++)out.push(d+String(i));
+  if(mode==='B'||mode==='AB')for(let i=0;i<10;i++)out.push(String(i)+d);
+  return [...new Set(out)];
+}
+function mkStripWords(s){return String(s)
+  .replace(/\b(?:DS|DB|SG|FB|GB|GL|GALI|S\.?G\.?|crossing|crosing|jt|jc|joda\s*(?:cut|ct|cat)|jode\s*cut|plt|plat|palat|palti|palt|wp|andar|ander|bahar|total|ttl|game)\b/gi,' ')
+  .replace(/\b(?:rs|rupees)\b/gi,' ');
+}
+function mkMode(raw){
+  if(/\d{3}\s*AB\b/i.test(raw)||/\b(?:andar|ander)\s*\+?\s*bahar\b/i.test(raw))return 'AB';
+  if(/\d{3}\s*A\b/i.test(raw)||/\b(?:andar|ander)\b/i.test(raw))return 'A';
+  if(/\d{3}\s*B\b/i.test(raw)||/\bbahar\b/i.test(raw))return 'B';
+  return null;
+}
+function mkParseLine(line){
+  const override=mkAssistantOverride(line);if(override)return [override];
+  const raw=mkCleanRaw(line);if(!raw||/^\s*(?:total|ttl|game\s*total)\b/i.test(raw))return [];
+  const jt=/\b(?:jt|jc)\b|joda\s*(?:cut|ct|cat)|jode\s*cut/i.test(raw);
+  const reverse=/\b(?:plt|plat|palat|palti|palt|wp)\b/i.test(raw);
+  const mode=mkMode(raw);
+  let source=raw.replace(/\b(?:DS|DB|SG|FB|GB|GL|GALI|S\.?G\.?)\b/gi,' ').trim();
+  // Pair amount followed by a separate total, e.g. 14.40=310 Rs SG → 14(40); total is ignored.
+  const pairThenTotal=source.match(/^(\d{2})\s*[^\dA-Za-z\s]+\s*(\d+(?:\.\d+)?)\s*=\s*\d{3,}.*$/i);
+  if(pairThenTotal)return [mkEntry([pairThenTotal[1]],mkAmount(pairThenTotal[2]))];
+  let amount=null;
+  const takeEnd=(re)=>{const m=source.match(re);if(!m)return false;amount=mkAmount(m[1]);source=source.slice(0,m.index).trim();return true};
+  // Explicit amount formats have priority.
+  takeEnd(/\s*[\(\[\{]+\s*(?:into|intu|intuu|itno)?\s*[^0-9A-Za-z₹]*\s*(\d+(?:\.\d+)?)\s*(?:crossing|crosing)?[^\d]*$/i) ||
+  takeEnd(/\b(?:into|intu|intuu|itno)\b\s*[^0-9A-Za-z₹]*\s*(\d+(?:\.\d+)?)\s*[^\d]*$/i) ||
+  takeEnd(/(?:rs|rupees)\s*[^0-9]*\s*(\d+(?:\.\d+)?)\s*[^\d]*$/i) ||
+  takeEnd(/(\d+(?:\.\d+)?)\s*(?:ki|kee|की)\s*[^\d]*$/i) ||
+  takeEnd(/\s+(\d+(?:\.\d+)?)\s*$/i);
+  // Haruf mode may be followed directly by amount: 888 ab 100 / 111 a 200.
+  if(amount===null){const m=source.match(/^(.*?\b\d{3}\s*(?:AB|A|B)?)(?:\s+)(\d+(?:\.\d+)?)\s*$/i);if(m){const tri=m[1].match(/(\d)\1\1/);if(tri){amount=mkAmount(m[2]);source=m[1]}}}
+  // Unlimited symbols may appear before/around the final amount.
+  // Examples: ((50), (((50)), **50, *50into.....20
+  // The final amount is applied to the numeric group before the symbol run.
+  if(amount===null){
+    const m=source.match(/^(.*?)(?:[^\dA-Za-z\s]+)\s*(\d+(?:\.\d+)?)\s*(?:[^\dA-Za-z\s]*)$/);
+    if(m){
+      const before=(m[1].match(/\d+/g)||[]);
+      const compact=before.filter(n=>n.length===2||(n.length>=3&&n.length<=8));
+      if(compact.length){amount=mkAmount(m[2]);source=m[1]}
+    }
+  }
+  // Amount written as final whitespace number after 2-digit jodi groups.
+  if(amount===null){const m=source.match(/^(.*\d{2})\s+(\d+(?:\.\d+)?)\s*$/);if(m){const before=(m[1].match(/\d+/g)||[]);if(before.length&&before.every(n=>n.length===2)){amount=mkAmount(m[2]);source=m[1]}}}
+  const harufMatch=source.match(/\b([0-9])\1\1\b/);
+  if(harufMatch){
+    const converted=mkHaruf(harufMatch[0],mode||'B');
+    const harufAmount=amount===null?null:amount/10;
+    return [mkEntry(converted,harufAmount)];
+  }
+  let work=mkStripWords(source).replace(/\b(?:A|B|AB)\b/gi,' ');
+  const nums=(work.match(/\d+/g)||[]);
+  if(!nums.length)return [];
+  let pairs=[];
+  const crossToken=nums.find(n=>n.length>=3&&n.length<=8);
+  const crossRequested=/\bcrossing\b|\bcrosing\b/i.test(raw);
+  if(crossToken&&(crossRequested||jt||(nums.filter(n=>n.length>=2).length===1&&crossToken.length>=3))){
+    const ds=[];for(const d of crossToken)if(!ds.includes(d))ds.push(d);
+    if(ds.length>=3&&ds.length<=8)pairs=mkPairsCross(ds,jt);
+  }
+  if(!pairs.length)pairs=nums.filter(n=>n.length===2);
+  if(!pairs.length)return [];
+  if(reverse){const expanded=[];for(const n of pairs){expanded.push(n);const r=reverseNumber(n);if(r!==n)expanded.push(r)}pairs=expanded;}
+  return [mkEntry(pairs,amount)];
+}
+function parseLine(originalLine){const es=mkParseLine(originalLine);return{output:es.map(e=>e.text).join('\n'),total:es.reduce((t,e)=>t+Number(e.lineTotal||0),0),entries:es}}
+function parseInputStrict(input){
+  const whole=mkAssistantNormalize(input);
+  const wholeRule=mkAssistantRules().find(r=>r.input===whole);
+  if(wholeRule){const text=String(wholeRule.output||'').trim();const ns=(text.match(/\b\d{2}\b/g)||[]);const am=(text.match(/\((\d+(?:\.\d+)?)\)/g)||[]).map(x=>Number(x.replace(/[^0-9.]/g,'')));return{output:text,entries:[{text,count:ns.length,amount:am.length?am[am.length-1]:null,lineTotal:0}],total:0};}
+  const out=[],entries=[];
+  for(const line of String(input||'').split(/\r?\n/)){
+    const es=mkParseLine(line);
+    for(const e of es)if(e&&e.text){out.push(e.text);entries.push(e)}
+  }
+  return{output:out.join('\n'),entries,total:entries.reduce((t,e)=>t+Number(e.lineTotal||0),0)};
+}
+
+function verifyProcessedResult(input,output,entries){
+  const problems=[];
+  if(!output && (input||"").trim())problems.push("Output empty");
+  (entries||[]).forEach((e,i)=>{
+    const count=Number(e.count||0),amount=e.amount;
+    if(!e.text)problems.push("Entry "+(i+1)+" empty");
+    if(amount!==null&&amount!==undefined&&amount!=="" && Math.abs(Number(e.lineTotal||0)-count*Number(amount))>1e-9)problems.push("Amount calculation mismatch");
+    if(e.text && /\(\s*\d+(?:\.\d+)?\s*\)/.test(e.text)===false && amount!==null&&amount!==undefined&&amount!=="")problems.push("Amount display mismatch");
+  });
+  const el=document.getElementById("verifyStatus");
+  if(!el)return problems.length===0;
+  el.className="verify-status "+(problems.length?"warn":"ok");
+  el.textContent=problems.length?"⚠ VERIFY: "+problems[0]:"✓ VERIFIED • Offline deterministic checks PASS";
+  return problems.length===0;
+}
+
+function processData(){
+  const input=document.getElementById("rawInput").value;
+  const r=parseInputStrict(input);
+  const finalOutput=r.output||"";
+  document.getElementById("output").textContent=finalOutput;
+  const current=getCurrent();current.input=input;current.output=finalOutput;current.total=Number(r.total||0);current.entries=r.entries||[];
+  verifyProcessedResult(input,finalOutput,current.entries);saveApp();
+}
+
+function saveCurrentData(){
+  const current=getCurrent();
+  const input=document.getElementById("rawInput").value.trim();
+  const output=document.getElementById("output").textContent.trim();
+  const total=Number(current.total||0);
+  if(!input&&!output)return;
+  if(!Array.isArray(current.history))current.history=[];
+  current.history.push({date:current.activeDate||todayKey(),time:new Date().toLocaleString(),input,output,total,entries:Array.isArray(current.entries)?JSON.parse(JSON.stringify(current.entries)):[]});
+  current.savedTotal=Number(current.savedTotal||0)+total;
+  current.input="";current.output="";current.total=0;current.entries=[];
+  document.getElementById("rawInput").value="";document.getElementById("output").textContent="";
+  saveApp();renderGameTotals();renderSaveHistory();
+  showToast("DATA SAVED");
+}
+
+function deleteCurrentData(){
+  mkConfirm("Current input/output delete karein?",()=>{
+  const current=getCurrent();
+  current.input="";
+  current.output="";
+  current.total=0;
+  current.entries=[];
+
+  document.getElementById("rawInput").value="";
+  document.getElementById("output").textContent="";
+  saveApp();
+  });
+}
+
+async function copyOutput(){
+  const text=document.getElementById("output").textContent;
+  if(!text)return;
+
+  try{
+    await navigator.clipboard.writeText(text);
+  }catch(e){
+    const t=document.createElement("textarea");
+    t.value=text;
+    document.body.appendChild(t);
+    t.select();
+    document.execCommand("copy");
+    t.remove();
+  }
+}
+
+window.addEventListener("popstate",function(){
+  document.getElementById("helpPage")?.classList.remove("show");
+  document.getElementById("assistantPage")?.classList.remove("show");
+  document.getElementById("clientModal")?.classList.remove("show");
+  document.getElementById("resultModal")?.classList.remove("show");
+  document.getElementById("masterPage")?.classList.remove("show");
+  document.getElementById("finalPage")?.classList.remove("show");
+  document.getElementById("gameHistoryPage")?.classList.remove("show");
+  document.getElementById("helpPage")?.classList.remove("show");
+  if(MASTER_RETURN_GAME){APP.selectedGame=MASTER_RETURN_GAME;ensureClientGame();saveApp();renderGames();loadCurrentData();processData();renderGameTotals();}
+  document.getElementById("app")?.classList.add("ready");window.scrollTo(0,0);
+});
+if(!history.state)history.replaceState({page:"app"},"","#app");
+
+window.addEventListener("error",function(e){
+  const box=document.getElementById("planPaymentStatus");
+  if(box && !document.getElementById("app")?.classList.contains("ready")){
+    box.textContent="App load error: "+(e.message||"Unknown error");
+    box.className="plan-payment-status show bad";
+  }
+});
+
+try{bootLicense();}catch(e){
+  console.error(e);
+  const st=document.getElementById("planPaymentStatus");
+  if(st){st.textContent="App load error: "+(e.message||"Please reload");st.className="plan-payment-status show bad";}
+}
+
+setInterval(()=>{
+  if(document.getElementById("app")?.classList.contains("ready"))rollAllGamesToToday();
+},15000);
+
+setInterval(()=>{
+  if(readLicense()){updateTrialTimer();return;}
+  const trial=getTrial();
+  if(trial){
+    const now=Date.now();
+    if(Number(trial.lastSeen||0)>now+300000 || now>=Number(trial.expiresAt)){
+      document.getElementById("app").classList.remove("ready");
+      document.getElementById("homePage")?.classList.remove("show");
+      document.getElementById("lockScreen").style.display="flex";
+      updateTrialTimer();
+      showTrialEnded();
+    }else{
+      trial.lastSeen=now;saveTrial(trial);updateTrialTimer();
+    }
+  }
+},1000);
+</script>
+
+
+<script>
+/* MK PAYMENT BACKEND HELPERS */
+async function mkPaymentApi(payload){
+  const res = await fetch(PAYMENT_API_URL,{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify(payload)
+  });
+  const data = await res.json().catch(()=>({success:false,error:"Invalid server response"}));
+  if(!res.ok || data.success===false) throw new Error(data.error || "Request failed");
+  return data;
+}
+async function registerServerTrial(mobile){
+  return await mkPaymentApi({
+    action:"register_trial",
+    mobile:String(mobile||"").replace(/\D/g,"").slice(-10),
+    device_id:getDeviceId()
+  });
+}
+async function checkServerTrial(mobile){
+  return await mkPaymentApi({
+    action:"check_trial",
+    mobile:String(mobile||"").replace(/\D/g,"").slice(-10),
+    device_id:getDeviceId()
+  });
+}
+async function activateServerLicense(mobile,pin){
+  return await mkPaymentApi({
+    action:"activate",
+    mobile:String(mobile||"").replace(/\D/g,"").slice(-10),
+    pin:String(pin||"").trim()
+  });
+}
+async function checkServerLicense(mobile){
+  return await mkPaymentApi({
+    action:"check_license",
+    mobile:String(mobile||"").replace(/\D/g,"").slice(-10)
+  });
+}
+</script>
+
+</body>
+</html>
